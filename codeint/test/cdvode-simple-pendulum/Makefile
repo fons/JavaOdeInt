@@ -4,10 +4,8 @@ INCFLAGS = -I $(PWD)/../../cdvode/include
 CFLAGS   = -c -Wall $(INCFLAGS) $(DEBUG) -O3 -ftree-vectorize -msse2 -ffast-math
 LDFLAGS  = -L $(PWD)/../../../target/lib/darwin_universal -lcdvode -ldvode -lm -lgfortran
 
-
-OBJDIR       = ../obj
-EXEDIR       = ../bin
-
+OBJDIR       = $(PWD)/../../../target/test/obj
+EXEDIR       = $(PWD)/../../../target/test/bin
 
 #
 # directory name is executable name
