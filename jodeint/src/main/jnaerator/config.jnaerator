@@ -1,0 +1,16 @@
+// JNAerator config file.
+
+-rootPackage com.kabouterlabs.jodeint
+
+
+-library cdvode
+-I$(DIR)/../native/codeint/cdvode/include
+$(DIR)/../native/codeint/cdvode/include/cdvode.h
+
+
+-library codepack
+-I$(DIR)/../native/codeint/codepack/include
+$(DIR)/../native/codeint/codepack/include/codepack.h
+
+
+//-publicRawBindings
