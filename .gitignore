@@ -1,5 +1,7 @@
 *.[oa]
 *.dylib
 target
+jodeint/src/main/resources/
+jodeint/target
 
 
