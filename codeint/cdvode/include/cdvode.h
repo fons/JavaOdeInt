@@ -46,6 +46,27 @@ typedef enum cdvode_iteration_method_e {NO_JACOBIAN=0,
 typedef enum cdvode_ode_err_e {UNCHANGED = 2, SUCCESS = 0, ERROR = -1, UNKNOWN_ERROR = -20} CDVODE_ODE_RETVAL;
 
 
-CDVODE_ODE_RETVAL vode_basic(double* stack, double* q, cdvode_ode_func f_func,int neq, double t0, double tf, double dt, CDVODE_METH meth);
+CDVODE_ODE_RETVAL dvode_basic(double* stack, double* q, cdvode_ode_func f_func,int neq, double t0, double tf, double dt, CDVODE_METH meth);
+
+void dvode(void (*f)(const int *neq, const double *t, const double *y, double *ydot, double* rpar, int* ipar),
+           const int *neq,
+           double *y,
+           double *t,
+           const double *tout,
+           const int *itol,
+           const double *rtol,
+           const double *atol,
+           const int *itask,
+           int *istate,
+           const int *iopt,
+           double *rwork,
+           const int *lrw,
+           int *iwork,
+           const int *liw,
+           void (*jac)(const int *neq, const double *t, const double *y, const int *ml, const int *mu, double *pd, const int *nrowpd, double* rpar, int* ipar),
+           const int *mf,
+           double* rpar,
+           int* ipar);
+
 
 #endif

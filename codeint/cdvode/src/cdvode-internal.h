@@ -1,6 +1,6 @@
-#ifndef H__CVODE_INTERNAL__H
-#define H__CVODE_INTERNAL__H
-
+#ifndef H__CDVODE_INTERNAL__H
+#define H__CDVODE_INTERNAL__H
+#include "../../../codeint/codeintdeps/include/stack.h"
 #include "../include/cdvode.h"
 
 /*
@@ -84,9 +84,6 @@ typedef struct dvode_params_s {
 
 double* write_to_stack(double* stack, int neq, int* index, double t_new, double* q);
 
-
-cdvode_params* create_basic_cdvode_params(int neq, cdvode_ode_func f_func, CDVODE_METH meth, CDVODE_JSV jsv, CDVODE_MITER miter);
-CDVODE_ISTATE_OUT dvode(double t, double *t0, double *q, cdvode_params *sodap);
 
 #endif
 

@@ -20,7 +20,7 @@ C     dy/dt = f(t,y) ,  or, in component form,
 C     dy(i)/dt = f(i) = f(i,t,y(1),y(2),...,y(NEQ)) (i = 1,...,NEQ).
 C Here the y vector is treated as complex.
 C ZVODE is a package based on the EPISODE and EPISODEB packages, and
-C on the ODEPACK user interface standard, with minor modifications.
+C on the ODEPACK user interface standard, with minor modifications.et 
 C
 C NOTE: When using ZVODE for a stiff system, it should only be used for
 C the case in which the function f is analytic, that is, when each f(i)

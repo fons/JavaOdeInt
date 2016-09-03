@@ -69,7 +69,7 @@ static int supported_methods_bool(CODEPACK_METHOD_FLAG mf)
     }
 }
 
-lsod_params* create_basic_lsodes_params(int neq, codepack_ode_func f_func, CODEPACK_METHOD_FLAG mf)
+static lsod_params* create_basic_lsodes_params(int neq, codepack_ode_func f_func, CODEPACK_METHOD_FLAG mf)
 {
     if (! supported_methods_bool(mf)) {
         return NULL;
@@ -99,15 +99,22 @@ lsod_params* create_basic_lsodes_params(int neq, codepack_ode_func f_func, CODEP
     return dsp;
 }
 
-CODEPACK_ISTATE_OUT lsodes(double t, double *t0, double *y, lsod_params *dlsodap)
+static void free_params(lsod_params* dsp)
+{
+    free(dsp->iwork);
+    free(dsp->rwork);
+    free(dsp);
+}
+
+static CODEPACK_ISTATE_OUT lsodes(lsod_params *dlsodap, double tnext, double *t, double *y)
 {
 
     //fprintf(stderr, "calling dlsoda_\n");
     dlsodes_(dlsodap->f_func,
             &dlsodap->neq,
             y,
-            t0,
-            &t,
+            t,
+            &tnext,
             &dlsodap->itol,
             &dlsodap->rtol.rtol_val,
             &dlsodap->atol.atol_val,
@@ -126,7 +133,7 @@ CODEPACK_ISTATE_OUT lsodes(double t, double *t0, double *y, lsod_params *dlsodap
 
 CODEPACK_ODE_RETVAL lsodes_basic(double* stack, double* y, codepack_ode_func f_func,int neq, double t0, double tf, double dt, CODEPACK_METHOD_FLAG mf)
 {
-    double t;
+    double t = 0.0;
     CODEPACK_ODE_RETVAL ode_ret;
     int index = 0;
     lsod_params* dlsop = create_basic_lsodes_params(neq, f_func, mf);
@@ -134,16 +141,37 @@ CODEPACK_ODE_RETVAL lsodes_basic(double* stack, double* y, codepack_ode_func f_f
     if (dlsop == NULL) {
         return ERROR;
     }
-    
+    stack = write_to_stack(stack, neq, &index, t, y);    
     t = t0;
     while(t < tf){    
-        CODEPACK_ISTATE_OUT ret = lsodes(t + dt, &t, y, dlsop);
+        CODEPACK_ISTATE_OUT ret = lsodes(dlsop, t + dt, &t, y);
         ode_ret = istate(ret);
         if (ode_ret < 0) {
-            return ode_ret;
+            break;
         }
-        stack = write_to_stack(stack, neq, &index, (t+dt), y);
+        stack = write_to_stack(stack, neq, &index, t, y);
     }
-    
+    free_params(dlsop);
     return ode_ret;   
+}
+
+void dlsodes(void (*f)(const int *neq, const double *t, const double *y, double *ydot),
+             const int *neq,
+             double *y,
+             double *t,
+             const double *tout,
+             const int *itol,
+             const double *rtol,
+             const double *atol,
+             const int *itask,
+             int *istate,
+             const int *iopt,
+             double *rwork,
+             const int *lrw,
+             int *iwork,
+             const int *liw,
+             void (*jac)(const int *neq, const double *t, const double *y, const int *j, const double *ian, double *jan, double *pdj),
+             const int *mf)
+{
+    dlsodes_(f,neq,y,t,tout,itol,rtol,atol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf);
 }

@@ -12,9 +12,16 @@
 		<maven.compiler.source>1.5</maven.compiler.source>
 		<maven.compiler.target>1.5</maven.compiler.target>
 		<bridj.version>0.7.1-SNAPSHOT</bridj.version>
+                
 	</properties>
 
 	<dependencies>
+            <!-- https://mvnrepository.com/artifact/net.sf.opencsv/opencsv -->
+            <dependency>
+                <groupId>net.sf.opencsv</groupId>
+                <artifactId>opencsv</artifactId>
+                <version>2.3</version>
+            </dependency>
 
 		<dependency>
 			<groupId>com.nativelibs4java</groupId>
@@ -34,34 +41,15 @@
 
 	<build>
 		<plugins>
-			<!--
-				If you're okay that your bindings will be regenerated at each build :
-
 			<plugin>
 				<groupId>com.nativelibs4java</groupId>
 				<artifactId>maven-jnaerator-plugin</artifactId>
 				<version>0.13-SNAPSHOT</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>generate</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			-->
-			<!--
-
-				If you'd rather re-generate bindings on demand inside src/main/java (with "mvn jnaerator:generate"), maybe to tweak them after generation and version them :
-                        -->
-                        
-			<plugin>
-				<groupId>com.nativelibs4java</groupId>
-				<artifactId>maven-jnaerator-plugin</artifactId>
-				<version>0.13-SNAPSHOT</version>
+                                <!-- uncomment this to have the generated sources go to that directory
 				<configuration>
-					<javaOutputDirectory>src/main/java</javaOutputDirectory>
+				    <javaOutputDirectory>src/main/java</javaOutputDirectory>
 				</configuration>
+                                -->
 			</plugin>
 
 

@@ -1,0 +1,74 @@
+C-----------------------------------------------------------------------
+      SUBROUTINE GNI_IRK2(N,FCN,NSTEP,X,P,Q,XEND,
+     &                    METH,SOLFIX,IOUT,RPAR,IPAR)
+C-----------------------------------------------------------------------
+C                 VERSION OF SEPTEMBER 4,2002  
+C  E-MAIL CONTACT ADDRESS : Ernst.Hairer@math.unige.ch
+C-----------------------------------------------------------------------
+C  SOLVES SECOND ORDER ORDINARY DIFFERENTIAL EQUATIONS OF THE FORM
+C                       Q'' = F(X,Q)
+C  BASED ON THE SYMPLECTIC AND SYMMETRIC GAUSS (IRK) METHODS
+C  DESCRIBED IN SECTIONS II.1, VIII.6 OF THE BOOK:
+C
+C      E. HAIRER, C. LUBICH, G. WANNER, GEOMETRIC NUMERICAL INTEGRATION,
+C         STRUCTURE-PRESERVING ALGORITHMS FOR ODES.
+C         SPRINGER SERIES IN COMPUT. MATH. 31, SPRINGER 2002.
+C
+C  AND IN THE PUBLICATION
+C
+C      E. HAIRER, M. HAIRER, GNI-CODES - MATLAB PROGRAMS FOR
+C         GEOMETRIC NUMERICAL INTEGRATION.
+C
+C  INPUT..
+C     N           DIMENSION OF Q AND F(X,Q) 
+C
+C     FCN         NAME (EXTERNAL) OF SUBROUTINE COMPUTING F(X,Q):
+C                    SUBROUTINE FCN(N,X,Q,F,RPAR,IPAR)
+C                    REAL*8 Q(N),F(N)
+C                    F(1)=...   ETC.
+C
+C     NSTEP       NUMBER OF INTEGRATION STEPS
+C                    CONSTANT STEP SIZE, H=(XEND-X)/NSTEP
+C
+C     X           INITIAL X-VALUE
+C     P(N)        INITIAL VELOCITY VECTOR
+C     Q(N)        INITIAL POSITION VECTOR
+C     XEND        FINAL X-VALUE
+C
+C     METH        NUMBER OF STAGES OF THE GAUSS METHOD
+C                    FOR THE MOMENT ONLY POSSIBLE VALUES: 2,4,6.
+C
+C     SOLFIX      NAME (EXTERNAL) OF SUBROUTINE PROVIDING THE
+C                 NUMERICAL SOLUTION DURING INTEGRATION. 
+C                 IF IOUT=1, IT IS CALLED AFTER EVERY STEP.
+C                 SUPPLY A DUMMY SUBROUTINE IF IOUT=0. 
+C                    SUBROUTINE SOLFIX (NR,XOLD,X,P,Q,N,IRTRN,RPAR,IPAR)
+C                    DOUBLE PRECISION X,Y(N),CONT(LRC)
+C                      ....  
+C                 SOLFIX FURNISHES THE SOLUTION "Q,P" AT THE NR-TH
+C                    GRID-POINT "X" (INITIAL VALUE FOR NR=0).
+C                 "XOLD" IS THE PRECEEDING GRID-POINT.
+C                 "IRTRN" SERVES TO INTERRUPT THE INTEGRATION. IF IRTRN
+C                    IS SET <0, RETURN TO THE CALLING PROGRAM.
+C     IOUT        SWITCH FOR CALLING THE SUBROUTINE SOLFIX:
+C                    IOUT=0: SUBROUTINE IS NEVER CALLED
+C                    IOUT=1: SUBROUTINE IS AVAILABLE FOR OUTPUT.
+C
+C     RPAR(LR)    REAL PARAMETER ARRAY; LR MUST BE AT LEAST LR=10
+C                    RPAR(1),...,RPAR(10) SERVE AS PARAMETERS FOR
+C                    THE CODE. FURTHER VALUES CAN BE USED FOR DEFINING
+C                    PARAMETERS IN THE PROBLEM
+C     IPAR(LI)    INTEGER PARAMETER ARRAY; LI MUST BE AT LEAST LI=10
+C                    IPAR(1),...,IPAR(10) SERVE AS PARAMETERS FOR
+C                    THE CODE. FURTHER VALUES CAN BE USED FOR DEFINING
+C                    PARAMETERS IN THE PROBLEM
+C
+C  OUTPUT..
+C     P(N)        SOLUTION (VELOCITY) AT XEND
+C     Q(N)        SOLUTION (POSITION) AT XEND
+C-----------------------------------------------------------------------
+C     SOPHISTICATED SETTING OF PARAMETERS 
+C-----------------------------------------------------------------------
+C    RPAR(1)   UROUND, THE ROUNDING UNIT, DEFAULT 1.D-16.
+C    IPAR(1)   NITMAX, MAXIMAL NUMER OF FIXED POINT ITERAT., DEFAULT 50
+C-----------------------------------------------------------------------

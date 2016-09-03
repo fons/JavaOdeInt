@@ -1,0 +1,208 @@
+      subroutine dqawoe (f,a,b,omega,integr,epsabs,epsrel,limit,icall,
+     *  maxp1,result,abserr,neval,ier,last,alist,blist,rlist,elist,iord,
+     *   nnlog,momcom,chebmo)
+
+c*********************************************************************72
+c
+cc DQAWOE computes the integrals of oscillatory integrands.
+c
+c***begin prologue  dqawoe
+c***date written   800101   (yymmdd)
+c***revision date  830518   (yymmdd)
+c***category no.  h2a2a1
+c***keywords  automatic integrator, special-purpose,
+c             integrand with oscillatory cos or sin factor,
+c             clenshaw-curtis method, (end point) singularities,
+c             extrapolation, globally adaptive
+c***author  piessens,robert,appl. math. & progr. div. - k.u.leuven
+c           de doncker,elise,appl. math. & progr. div. - k.u.leuven
+c***purpose  the routine calculates an approximation result to a given
+c            definite integral
+c            i = integral of f(x)*w(x) over (a,b)
+c            where w(x) = cos(omega*x) or w(x)=sin(omega*x),
+c            hopefully satisfying following claim for accuracy
+c            abs(i-result).le.max(epsabs,epsrel*abs(i)).
+c***description
+c
+c        computation of oscillatory integrals
+c        standard fortran subroutine
+c        double precision version
+c
+c        parameters
+c         on entry
+c            f      - double precision
+c                     function subprogram defining the integrand
+c                     function f(x). the actual name for f needs to be
+c                     declared e x t e r n a l in the driver program.
+c
+c            a      - double precision
+c                     lower limit of integration
+c
+c            b      - double precision
+c                     upper limit of integration
+c
+c            omega  - double precision
+c                     parameter in the integrand weight function
+c
+c            integr - integer
+c                     indicates which of the weight functions is to be
+c                     used
+c                     integr = 1      w(x) = cos(omega*x)
+c                     integr = 2      w(x) = sin(omega*x)
+c                     if integr.ne.1 and integr.ne.2, the routine
+c                     will end with ier = 6.
+c
+c            epsabs - double precision
+c                     absolute accuracy requested
+c            epsrel - double precision
+c                     relative accuracy requested
+c                     if  epsabs.le.0
+c                     and epsrel.lt.max(50*rel.mach.acc.,0.5d-28),
+c                     the routine will end with ier = 6.
+c
+c            limit  - integer
+c                     gives an upper bound on the number of subdivisions
+c                     in the partition of (a,b), limit.ge.1.
+c
+c            icall  - integer
+c                     if dqawoe is to be used only once, icall must
+c                     be set to 1.  assume that during this call, the
+c                     chebyshev moments (for clenshaw-curtis integration
+c                     of degree 24) have been computed for intervals of
+c                     lenghts (abs(b-a))*2**(-l), l=0,1,2,...momcom-1.
+c                     if icall.gt.1 this means that dqawoe has been
+c                     called twice or more on intervals of the same
+c                     length abs(b-a). the chebyshev moments already
+c                     computed are then re-used in subsequent calls.
+c                     if icall.lt.1, the routine will end with ier = 6.
+c
+c            maxp1  - integer
+c                     gives an upper bound on the number of chebyshev
+c                     moments which can be stored, i.e. for the
+c                     intervals of lenghts abs(b-a)*2**(-l),
+c                     l=0,1, ..., maxp1-2, maxp1.ge.1.
+c                     if maxp1.lt.1, the routine will end with ier = 6.
+c
+c         on return
+c            result - double precision
+c                     approximation to the integral
+c
+c            abserr - double precision
+c                     estimate of the modulus of the absolute error,
+c                     which should equal or exceed abs(i-result)
+c
+c            neval  - integer
+c                     number of integrand evaluations
+c
+c            ier    - integer
+c                     ier = 0 normal and reliable termination of the
+c                             routine. it is assumed that the
+c                             requested accuracy has been achieved.
+c                   - ier.gt.0 abnormal termination of the routine.
+c                             the estimates for integral and error are
+c                             less reliable. it is assumed that the
+c                             requested accuracy has not been achieved.
+c            error messages
+c                     ier = 1 maximum number of subdivisions allowed
+c                             has been achieved. one can allow more
+c                             subdivisions by increasing the value of
+c                             limit (and taking according dimension
+c                             adjustments into account). however, if
+c                             this yields no improvement it is advised
+c                             to analyze the integrand, in order to
+c                             determine the integration difficulties.
+c                             if the position of a local difficulty can
+c                             be determined (e.g. singularity,
+c                             discontinuity within the interval) one
+c                             will probably gain from splitting up the
+c                             interval at this point and calling the
+c                             integrator on the subranges. if possible,
+c                             an appropriate special-purpose integrator
+c                             should be used which is designed for
+c                             handling the type of difficulty involved.
+c                         = 2 the occurrence of roundoff error is
+c                             detected, which prevents the requested
+c                             tolerance from being achieved.
+c                             the error may be under-estimated.
+c                         = 3 extremely bad integrand behaviour occurs
+c                             at some points of the integration
+c                             interval.
+c                         = 4 the algorithm does not converge.
+c                             roundoff error is detected in the
+c                             extrapolation table.
+c                             it is presumed that the requested
+c                             tolerance cannot be achieved due to
+c                             roundoff in the extrapolation table,
+c                             and that the returned result is the
+c                             best which can be obtained.
+c                         = 5 the integral is probably divergent, or
+c                             slowly convergent. it must be noted that
+c                             divergence can occur with any other value
+c                             of ier.gt.0.
+c                         = 6 the input is invalid, because
+c                             (epsabs.le.0 and
+c                              epsrel.lt.max(50*rel.mach.acc.,0.5d-28))
+c                             or (integr.ne.1 and integr.ne.2) or
+c                             icall.lt.1 or maxp1.lt.1.
+c                             result, abserr, neval, last, rlist(1),
+c                             elist(1), iord(1) and nnlog(1) are set
+c                             to zero. alist(1) and blist(1) are set
+c                             to a and b respectively.
+c
+c            last  -  integer
+c                     on return, last equals the number of
+c                     subintervals produces in the subdivision
+c                     process, which determines the number of
+c                     significant elements actually in the
+c                     work arrays.
+c            alist  - double precision
+c                     vector of dimension at least limit, the first
+c                      last  elements of which are the left
+c                     end points of the subintervals in the partition
+c                     of the given integration range (a,b)
+c
+c            blist  - double precision
+c                     vector of dimension at least limit, the first
+c                      last  elements of which are the right
+c                     end points of the subintervals in the partition
+c                     of the given integration range (a,b)
+c
+c            rlist  - double precision
+c                     vector of dimension at least limit, the first
+c                      last  elements of which are the integral
+c                     approximations on the subintervals
+c
+c            elist  - double precision
+c                     vector of dimension at least limit, the first
+c                      last  elements of which are the moduli of the
+c                     absolute error estimates on the subintervals
+c
+c            iord   - integer
+c                     vector of dimension at least limit, the first k
+c                     elements of which are pointers to the error
+c                     estimates over the subintervals,
+c                     such that elist(iord(1)), ...,
+c                     elist(iord(k)) form a decreasing sequence, with
+c                     k = last if last.le.(limit/2+2), and
+c                     k = limit+1-last otherwise.
+c
+c            nnlog  - integer
+c                     vector of dimension at least limit, containing the
+c                     subdivision levels of the subintervals, i.e.
+c                     iwork(i) = l means that the subinterval
+c                     numbered i is of length abs(b-a)*2**(1-l)
+c
+c         on entry and return
+c            momcom - integer
+c                     indicating that the chebyshev moments
+c                     have been computed for intervals of lengths
+c                     (abs(b-a))*2**(-l), l=0,1,2, ..., momcom-1,
+c                     momcom.lt.maxp1
+c
+c            chebmo - double precision
+c                     array of dimension (maxp1,25) containing the
+c                     chebyshev moments
+c
+c***references  (none)
+c***routines called  d1mach,dqc25f,dqelg,dqpsrt
+c***end prologue  dqawoe

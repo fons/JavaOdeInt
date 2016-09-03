@@ -72,7 +72,7 @@ static int liw(CODEPACK_METHOD_FLAG mf, int neq)
     }
 }
 
-lsod_params* create_basic_lsode_params(int neq, codepack_ode_func f_func, CODEPACK_METHOD_FLAG mf)
+static lsod_params* create_basic_lsode_params(int neq, codepack_ode_func f_func, CODEPACK_METHOD_FLAG mf)
 {
     const double rtol = 0.0;
     const double atol = 1e-12;
@@ -101,15 +101,21 @@ lsod_params* create_basic_lsode_params(int neq, codepack_ode_func f_func, CODEPA
     return dsp;
 }
 
-CODEPACK_ISTATE_OUT lsode(double t, double *t0, double *q, lsod_params *dlsodap)
+static void free_params(lsod_params* dsp)
+{
+    free(dsp->iwork);
+    free(dsp->rwork);
+    free(dsp);
+}
+
+static CODEPACK_ISTATE_OUT call_lsode(lsod_params *dlsodap, double tnext, double *t, double *q)
 {
 
-    //fprintf(stderr, "calling dlsoda_\n");
     dlsode_(dlsodap->f_func,
             &dlsodap->neq,
             q,
-            t0,
-            &t,
+            t,
+            &tnext,
             &dlsodap->itol,
             &dlsodap->rtol.rtol_val,
             &dlsodap->atol.atol_val,
@@ -128,19 +134,41 @@ CODEPACK_ISTATE_OUT lsode(double t, double *t0, double *q, lsod_params *dlsodap)
 
 CODEPACK_ODE_RETVAL lsode_basic(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt, CODEPACK_METHOD_FLAG mf)
 {
-    double t;
+    double t = 0.0;
     CODEPACK_ODE_RETVAL ode_ret;
     int index = 0;
     lsod_params* dlsop = create_basic_lsode_params(neq, f_func, mf);
+    stack = write_to_stack(stack, neq, &index, t, q);
     t = t0;
     while(t < tf){    
-        CODEPACK_ISTATE_OUT ret = lsode(t + dt, &t, q, dlsop);
+        CODEPACK_ISTATE_OUT ret = call_lsode(dlsop, t + dt, &t, q);
         ode_ret = istate(ret);
         if (ode_ret < 0) {
-            return ode_ret;
+            break;
         }
-        stack = write_to_stack(stack, neq, &index, (t+dt), q);
+        stack = write_to_stack(stack, neq, &index, t, q);
     }
-    
+    free_params(dlsop);
     return ode_ret;   
+}
+
+void dlsode(void (*f)(const int *neq, const double *t, const double *y, double *ydot),
+            const int *neq,
+            double *y,
+            double *t,
+            const double *tout,
+            const int *itol,
+            const double *rtol,
+            const double *atol,
+            const int *itask,
+            int *istate,
+            const int *iopt,
+            double *rwork,
+            const int *lrw,
+            int *iwork,
+            const int *liw,
+            void (*jac)(const int *neq, const double *t, const double *y, const int *ml, const int *mu, double *pd, const int *nrowpd),
+            const int *mf)
+{
+    dlsode_(f,neq,y,t,tout,itol,rtol,atol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf);
 }

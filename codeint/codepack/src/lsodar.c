@@ -57,15 +57,22 @@ lsod_params* create_basic_lsodar_params(int neq, codepack_ode_func f_func)
     return dsp;
 }
 
-CODEPACK_ISTATE_OUT lsodar(double t, double *t0, double *q, lsod_params *dlsodap)
+static void free_params(lsod_params* dsp)
+{
+    free(dsp->iwork);
+    free(dsp->rwork);
+    free(dsp->jroot);
+    free(dsp);
+}
+
+CODEPACK_ISTATE_OUT lsodar(lsod_params *dlsodap, double tnext, double *t, double *q)
 {
 
-    //fprintf(stderr, "calling dlsoda_\n");
     dlsodar_(dlsodap->f_func,
              &dlsodap->neq,
              q,
-             t0,
-             &t,
+             t,
+             &tnext,
              &dlsodap->itol,
              &dlsodap->rtol.rtol_val,
              &dlsodap->atol.atol_val,
@@ -93,14 +100,39 @@ CODEPACK_ODE_RETVAL lsodar_basic(double* stack, double* q, codepack_ode_func f_f
     int index = 0;
     lsod_params* dlsop = create_basic_lsodar_params(neq, f_func);
     t = t0;
+    stack = write_to_stack(stack, neq, &index, t, q);
     while(t < tf){    
-        CODEPACK_ISTATE_OUT ret = lsodar(t + dt, &t, q, dlsop);
+        CODEPACK_ISTATE_OUT ret = lsodar(dlsop, t + dt, &t, q);
         ode_ret = istate(ret);
         if (ode_ret < 0) {
-            return ode_ret;
+            break;
         }
-        stack = write_to_stack(stack, neq, &index, (t+dt), q);
+        stack = write_to_stack(stack, neq, &index, t, q);
     }
-    
+    free_params(dlsop);
     return ode_ret;
 }
+
+void dlsodar(void (*f)(const int *neq, const double *t, const double *y, double *ydot),
+             const int *neq,
+             double *y,
+             double *t,
+             const double *tout,
+             const int *itol,
+             const double *rtol,
+             const double *atol, 
+             const int *itask,
+             int *istate,
+             const int *iopt,
+             double *rwork,
+             const int *lrw,
+             int *iwork,
+             const int *liw,
+             void (*jac)(const int *neq, const double *t, const double *y, const int *ml, const int *mu, double *pd, const int *nrowpd), const int *jt, 
+             void (*g)(const int *neq, const double *t, const double *y, const int *ng, double *gout), const int *ng,
+             int *jroot)
+{
+    dlsodar_(f,neq,y,t,tout,itol,rtol,atol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,jt,g,ng,jroot);
+}
+
+

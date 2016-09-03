@@ -58,11 +58,89 @@ typedef enum codepack_jac_type_e {USER_PROVIDED = 1, INTERNAL = 2, USER_PROVIDED
 
 typedef enum codepack_ode_err_e {UNCHANGED = 2, SUCCESS = 0, ERROR = -1, UNKNOWN_ERROR = -20} CODEPACK_ODE_RETVAL;
 
-
-CODEPACK_ODE_RETVAL odeint(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt);
 CODEPACK_ODE_RETVAL lsode_basic(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt, CODEPACK_METHOD_FLAG mf);
 CODEPACK_ODE_RETVAL lsodes_basic(double* stack, double* y, codepack_ode_func f_func,int neq, double t0, double tf, double dt, CODEPACK_METHOD_FLAG mf);
 CODEPACK_ODE_RETVAL lsoda_basic(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt);
 CODEPACK_ODE_RETVAL lsodar_basic(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt);
+
+/*
+ * full fortran interface here
+ */
+
+
+void dlsode(void (*f)(const int *neq, const double *t, const double *y, double *ydot),
+            const int *neq,
+            double *y,
+            double *t,
+            const double *tout,
+            const int *itol,
+            const double *rtol,
+            const double *atol,
+            const int *itask,
+            int *istate,
+            const int *iopt,
+            double *rwork,
+            const int *lrw,
+            int *iwork,
+            const int *liw,
+            void (*jac)(const int *neq, const double *t, const double *y, const int *ml, const int *mu, double *pd, const int *nrowpd),
+            const int *mf);
+
+void dlsodes(void (*f)(const int *neq, const double *t, const double *y, double *ydot),
+             const int *neq,
+             double *y,
+             double *t,
+             const double *tout,
+             const int *itol,
+             const double *rtol,
+             const double *atol,
+             const int *itask,
+             int *istate,
+             const int *iopt,
+             double *rwork,
+             const int *lrw,
+             int *iwork,
+             const int *liw,
+             void (*jac)(const int *neq, const double *t, const double *y, const int *j, const double *ian, double *jan, double *pdj),
+             const int *mf);
+
+void dlsoda(void (*f)(const int *neq, const double *t, const double *y, double *ydot),
+            const int *neq,
+            double *y,
+            double *t,
+            const double *tout,
+            const int *itol,
+            const double *rtol,
+            const double *atol,
+            const int *itask,
+            int *istate,
+            const int *iopt,
+            double *rwork,
+            const int *lrw,
+            int *iwork,
+            const int *liw,
+            void (*jac)(const int *neq, const double *t, const double *y, const int *ml, const int *mu, double *pd, const int *nrowpd),
+            const int *jt);
+
+
+void dlsodar(void (*f)(const int *neq, const double *t, const double *y, double *ydot),
+             const int *neq,
+             double *y,
+             double *t,
+             const double *tout,
+             const int *itol,
+             const double *rtol,
+             const double *atol, 
+             const int *itask,
+             int *istate,
+             const int *iopt,
+             double *rwork,
+             const int *lrw,
+             int *iwork,
+             const int *liw,
+             void (*jac)(const int *neq, const double *t, const double *y, const int *ml, const int *mu, double *pd, const int *nrowpd), const int *jt, \
+             void (*g)(const int *neq, const double *t, const double *y, const int *ng, double *gout), const int *ng,
+             int *jroot);
+
 
 #endif

@@ -123,7 +123,7 @@ static CDVODE_ODE_RETVAL valid_mf(CDVODE_METH meth, CDVODE_JSV jsv, CDVODE_MITER
     
 }
 
-cdvode_params* create_basic_cdvode_params(int neq, cdvode_ode_func f_func, CDVODE_METH meth, CDVODE_JSV jsv, CDVODE_MITER miter)
+static cdvode_params* create_basic_cdvode_params(int neq, cdvode_ode_func f_func, CDVODE_METH meth, CDVODE_JSV jsv, CDVODE_MITER miter)
 {
     const double rtol = 0.0;
     const double atol = 1e-12;
@@ -157,34 +157,42 @@ cdvode_params* create_basic_cdvode_params(int neq, cdvode_ode_func f_func, CDVOD
     return dsp;
 }
 
-CDVODE_ISTATE_OUT vode(double t, double *t0, double *q, cdvode_params *dlsodap)
+static void free_params(cdvode_params* dsp)
+{
+    free(dsp->iwork);
+    free(dsp->rwork);
+    free(dsp);
+}
+
+
+static CDVODE_ISTATE_OUT dvode_w(cdvode_params *dlsodap, double tnext, double *t, double *q) 
 {
 
     //fprintf(stderr, "calling dlsoda_\n");
-    dvode_(dlsodap->f_func,
-           &dlsodap->neq,
-           q,
-           t0,
-           &t,
-           &dlsodap->itol,
-           &dlsodap->rtol.rtol_val,
-           &dlsodap->atol.atol_val,
-           (const int*) &dlsodap->itask,
-           &dlsodap->istate.istate,
-           (const int*) &dlsodap->iopt,
-           dlsodap->rwork,
-           &dlsodap->lrw,
-           dlsodap->iwork,
-           &dlsodap->liw,
-           dlsodap->jac,
-           (const int*)&dlsodap->mf,
-           dlsodap->rpar,
-           dlsodap->ipar);
+    dvode(dlsodap->f_func,
+          &dlsodap->neq,
+          q,
+          t,
+          &tnext,
+          &dlsodap->itol,
+          &dlsodap->rtol.rtol_val,
+          &dlsodap->atol.atol_val,
+          (const int*) &dlsodap->itask,
+          &dlsodap->istate.istate,
+          (const int*) &dlsodap->iopt,
+          dlsodap->rwork,
+          &dlsodap->lrw,
+          dlsodap->iwork,
+          &dlsodap->liw,
+          dlsodap->jac,
+          (const int*)&dlsodap->mf,
+          dlsodap->rpar,
+          dlsodap->ipar);
 
     return dlsodap->istate.istate_out;
 }
 
-CDVODE_ODE_RETVAL vode_basic(double* stack, double* q, cdvode_ode_func f_func,int neq, double t0, double tf, double dt, CDVODE_METH meth)
+CDVODE_ODE_RETVAL dvode_basic(double* stack, double* q, cdvode_ode_func f_func,int neq, double t0, double tf, double dt, CDVODE_METH meth)
 {
     double t;
     CDVODE_ODE_RETVAL ode_ret;
@@ -194,16 +202,40 @@ CDVODE_ODE_RETVAL vode_basic(double* stack, double* q, cdvode_ode_func f_func,in
         return ERROR;
     }
     cdvode_params* dlsop = create_basic_cdvode_params(neq, f_func, meth, SAVE_COPY, NO_JACOBIAN);
-
     t = t0;
+    stack = write_to_stack(stack, neq, &index, t, q);
     while(t < tf){    
-        CDVODE_ISTATE_OUT ret = vode(t + dt, &t, q, dlsop);
+        CDVODE_ISTATE_OUT ret = dvode_w(dlsop, t + dt, &t, q);
         ode_ret = istate(ret);
         if (ode_ret < 0) {
-            return ode_ret;
+            break;
         }
-        stack = write_to_stack(stack, neq, &index, (t+dt), q);
+        stack = write_to_stack(stack, neq, &index, t, q);
     }
-    
+    free_params(dlsop);
     return ode_ret;
 }
+
+void dvode(void (*f)(const int *neq, const double *t, const double *y, double *ydot, double* rpar, int* ipar),
+           const int *neq,
+           double *y,
+           double *t,
+           const double *tout,
+           const int *itol,
+           const double *rtol,
+           const double *atol,
+           const int *itask,
+           int *istate,
+           const int *iopt,
+           double *rwork,
+           const int *lrw,
+           int *iwork,
+           const int *liw,
+           void (*jac)(const int *neq, const double *t, const double *y, const int *ml, const int *mu, double *pd, const int *nrowpd, double* rpar, int* ipar),
+           const int *mf,
+           double* rpar,
+           int* ipar)
+{
+    dvode_(f,neq,y,t,tout,itol,rtol,atol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf,rpar,ipar);
+}
+

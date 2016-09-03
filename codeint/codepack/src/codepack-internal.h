@@ -1,6 +1,6 @@
 #ifndef H__CODEPACK_INTERNAL__H
 #define H__CODEPACK_INTERNAL__H
-
+#include "../../codeintdeps/include/stack.h"
 #include "../include/codepack.h"
 
 /*
@@ -132,21 +132,7 @@ typedef struct lsod_params_s {
 } lsod_params;
 
 int istate(CODEPACK_ISTATE_OUT istat);
-double* write_to_stack(double* stack, int neq, int* index, double t_new, double* q);
 
-
-lsod_params* create_basic_lsode_params(int neq, codepack_ode_func f_func, CODEPACK_METHOD_FLAG mf);
-CODEPACK_ISTATE_OUT lsode(double t, double *t0, double *q, lsod_params *sodap);
-
-
-lsod_params* create_basic_lsodes_params(int neq, codepack_ode_func f_func, CODEPACK_METHOD_FLAG mf);
-CODEPACK_ISTATE_OUT lsodes(double t, double *t0, double *q, lsod_params *sodap);
-
-lsod_params* create_basic_lsoda_params(int neq, codepack_ode_func f_func);
-CODEPACK_ISTATE_OUT lsoda(double t, double *t0, double *q, lsod_params *sodap);
-
-lsod_params* create_basic_lsodar_params(int neq, codepack_ode_func f_func);
-CODEPACK_ISTATE_OUT lsodar(double t, double *t0, double *q, lsod_params *sodap);
 
 
 #endif

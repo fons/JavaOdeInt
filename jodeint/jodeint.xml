@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="jodeint" default="all">
+  
+  
+  <property file="jodeint.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.war"/>
+    <include name="*.swc"/>
+    <include name="*.apk"/>
+    <include name="*.zip"/>
+    <include name="*.egg"/>
+    <include name="*.ane"/>
+    <include name="*.jar"/>
+    <include name="*.ear"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <include name="**/?*.properties"/>
+    <include name="**/?*.xml"/>
+    <include name="**/?*.gif"/>
+    <include name="**/?*.png"/>
+    <include name="**/?*.jpeg"/>
+    <include name="**/?*.jpg"/>
+    <include name="**/?*.html"/>
+    <include name="**/?*.dtd"/>
+    <include name="**/?*.tld"/>
+    <include name="**/?*.ftl"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.7" value="${jdk.home.1.7}/bin"/>
+  <path id="jdk.classpath.1.7">
+    <fileset dir="${jdk.home.1.7}">
+      <include name="lib/ant-javafx.jar"/>
+      <include name="lib/dt.jar"/>
+      <include name="lib/javafx-doclet.jar"/>
+      <include name="lib/javafx-mx.jar"/>
+      <include name="lib/jconsole.jar"/>
+      <include name="lib/sa-jdi.jar"/>
+      <include name="lib/tools.jar"/>
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/htmlconverter.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/jfxrt.jar"/>
+      <include name="jre/lib/JObjC.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.7}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.7}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.7"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.maven:_com.google.android.tools:dx:1.7.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/google/android/tools/dx/1.7/dx-1.7.jar"/>
+  </path>
+  
+  <path id="library.maven:_com.nativelibs4java:bridj:0.7.1-snapshot.classpath">
+    <pathelement location="${path.variable.maven_repository}/com/nativelibs4java/bridj/0.7.1-SNAPSHOT/bridj-0.7.1-SNAPSHOT.jar"/>
+  </path>
+  
+  <path id="library.maven:_junit:junit:4.10.classpath">
+    <pathelement location="${path.variable.maven_repository}/junit/junit/4.10/junit-4.10.jar"/>
+  </path>
+  
+  <path id="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath">
+    <pathelement location="${path.variable.maven_repository}/org/hamcrest/hamcrest-core/1.1/hamcrest-core-1.1.jar"/>
+  </path>
+  
+  <path id="library.net.sf.opencsv:opencsv:2.3.classpath">
+    <pathelement location="${path.variable.maven_repository}/net/sf/opencsv/opencsv/2.3/opencsv-2.3.jar"/>
+  </path>
+  
+  
+  <!-- Global Libraries -->
+  <!-- Register Custom Compiler Taskdefs -->
+  <property name="javac2.home" value="${idea.home}/lib"/>
+  <path id="javac2.classpath">
+    <pathelement location="${javac2.home}/javac2.jar"/>
+    <pathelement location="${javac2.home}/jdom.jar"/>
+    <pathelement location="${javac2.home}/asm-all.jar"/>
+    <pathelement location="${javac2.home}/jgoodies-forms.jar"/>
+  </path>
+  <target name="register.custom.compilers">
+    <taskdef name="javac2" classname="com.intellij.ant.Javac2" classpathref="javac2.classpath"/>
+    <taskdef name="instrumentIdeaExtensions" classname="com.intellij.ant.InstrumentIdeaExtensions" classpathref="javac2.classpath"/>
+  </target>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module jodeint -->
+  
+  <dirname property="module.jodeint.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.jodeint" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.jodeint" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.jodeint" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.jodeint" value="-encoding UTF-8 -source 1.5 -target 1.5 ${compiler.args}"/>
+  
+  <property name="jodeint.output.dir" value="${module.jodeint.basedir}/target/classes"/>
+  <property name="jodeint.testoutput.dir" value="${module.jodeint.basedir}/target/test-classes"/>
+  
+  <path id="jodeint.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="jodeint.module.production.classpath">
+    <path refid="${module.jdk.classpath.jodeint}"/>
+    <path refid="library.maven:_com.nativelibs4java:bridj:0.7.1-snapshot.classpath"/>
+    <path refid="library.maven:_com.google.android.tools:dx:1.7.classpath"/>
+    <path refid="library.net.sf.opencsv:opencsv:2.3.classpath"/>
+  </path>
+  
+  <path id="jodeint.runtime.production.module.classpath">
+    <pathelement location="${jodeint.output.dir}"/>
+    <path refid="library.maven:_com.nativelibs4java:bridj:0.7.1-snapshot.classpath"/>
+    <path refid="library.maven:_com.google.android.tools:dx:1.7.classpath"/>
+    <path refid="library.net.sf.opencsv:opencsv:2.3.classpath"/>
+  </path>
+  
+  <path id="jodeint.module.classpath">
+    <path refid="${module.jdk.classpath.jodeint}"/>
+    <pathelement location="${jodeint.output.dir}"/>
+    <path refid="library.maven:_com.nativelibs4java:bridj:0.7.1-snapshot.classpath"/>
+    <path refid="library.maven:_com.google.android.tools:dx:1.7.classpath"/>
+    <path refid="library.maven:_junit:junit:4.10.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath"/>
+    <path refid="library.net.sf.opencsv:opencsv:2.3.classpath"/>
+  </path>
+  
+  <path id="jodeint.runtime.module.classpath">
+    <pathelement location="${jodeint.testoutput.dir}"/>
+    <pathelement location="${jodeint.output.dir}"/>
+    <path refid="library.maven:_com.nativelibs4java:bridj:0.7.1-snapshot.classpath"/>
+    <path refid="library.maven:_com.google.android.tools:dx:1.7.classpath"/>
+    <path refid="library.maven:_junit:junit:4.10.classpath"/>
+    <path refid="library.maven:_org.hamcrest:hamcrest-core:1.1.classpath"/>
+    <path refid="library.net.sf.opencsv:opencsv:2.3.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.jodeint">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.jodeint">
+    <patternset refid="excluded.from.module.jodeint"/>
+  </patternset>
+  
+  <path id="jodeint.module.sourcepath">
+    <dirset dir="${module.jodeint.basedir}">
+      <include name="src/main/resources"/>
+      <include name="target/generated-sources/java"/>
+    </dirset>
+  </path>
+  
+  <path id="jodeint.module.test.sourcepath">
+    <dirset dir="${module.jodeint.basedir}">
+      <include name="src/main/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.jodeint" depends="compile.module.jodeint.production,compile.module.jodeint.tests" description="Compile module jodeint"/>
+  
+  <target name="compile.module.jodeint.production" depends="register.custom.compilers" description="Compile module jodeint; production classes">
+    <mkdir dir="${jodeint.output.dir}"/>
+    <javac2 destdir="${jodeint.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.jodeint}/javac">
+      <compilerarg line="${compiler.args.jodeint}"/>
+      <bootclasspath refid="jodeint.module.bootclasspath"/>
+      <classpath refid="jodeint.module.production.classpath"/>
+      <src refid="jodeint.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.jodeint"/>
+    </javac2>
+    
+    <copy todir="${jodeint.output.dir}">
+      <fileset dir="${module.jodeint.basedir}/src/main/resources">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+      <fileset dir="${module.jodeint.basedir}/target/generated-sources/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.jodeint.tests" depends="register.custom.compilers,compile.module.jodeint.production" description="compile module jodeint; test classes" unless="skip.tests">
+    <mkdir dir="${jodeint.testoutput.dir}"/>
+    <javac2 destdir="${jodeint.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.jodeint}/javac">
+      <compilerarg line="${compiler.args.jodeint}"/>
+      <bootclasspath refid="jodeint.module.bootclasspath"/>
+      <classpath refid="jodeint.module.classpath"/>
+      <src refid="jodeint.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.jodeint"/>
+    </javac2>
+    
+    <copy todir="${jodeint.testoutput.dir}">
+      <fileset dir="${module.jodeint.basedir}/src/main/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.jodeint" description="cleanup module">
+    <delete dir="${jodeint.output.dir}"/>
+    <delete dir="${jodeint.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.jodeint" description="cleanup all"/>
+  
+  <target name="build.modules" depends="init, clean, compile.module.jodeint" description="build all modules"/>
+  
+  <target name="all" depends="build.modules" description="build all"/>
+</project>
