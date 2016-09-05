@@ -37,7 +37,8 @@ static void print_stack(FILE* fn, double* stack)
     int size = (int) *f;
     int neq  = (int) *(f+1);
     int all  = size * (2 * neq + 1);
-    for (int k = 0 ; k < all; k++) {
+    int k = 0;
+    for (k = 0 ; k < all; k++) {
         fprintf(fn, "%.15lf,", stack[k]);
         
         if (((k + 1) % (2*neq + 1)) == 0) {

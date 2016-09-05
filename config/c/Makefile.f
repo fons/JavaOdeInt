@@ -10,10 +10,12 @@ ifeq ($(OS), Darwin)
   OS_ARCH = darwin_universal
   LDFLAGS   += -mmacosx-version-min=10.11
   SHARED_EXT = dylib
+  SHARED_FLAG=-dynamiclib
  else
      OS_ARCH = linux_x64
      SHARED_EXT = so
      LDFLAGS   += -Wl,--hash-style=both
+     SHARED_FLAG=-shared
 endif
 
 OUT_BASE_DIR = $(PWD)/../../../target/
@@ -38,7 +40,7 @@ all: $(LIB)
 
 $(LIB) : $(OBJECTS)
 	@mkdir -p $(LIB_DIR)
-	$(CC) -L$(LIB_DIR)  $(LINFLAGS) -dynamiclib $(LDFLAGS) -o $(LIB) $(OBJECTS)
+	$(CC) -L$(LIB_DIR)  $(LINFLAGS) $(SHARED_FLAG) $(LDFLAGS) -o $(LIB) $(OBJECTS)
 
 $(OBJ_DIR)/%.o: %.c $(INCLUDES)
 	@mkdir -p $(OBJ_DIR)

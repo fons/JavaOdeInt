@@ -1,16 +1,9 @@
-// JNAerator config file.
-
+// -----  generated on 20160904_235630 by vagrant for czvode  ---------------
+      
 -rootPackage com.kabouterlabs.jodeint
-
-
--library cdvode
--I$(DIR)/../native/codeint/cdvode/include
-$(DIR)/../native/codeint/cdvode/include/cdvode.h
-
-
--library codepack
--I$(DIR)/../native/codeint/codepack/include
-$(DIR)/../native/codeint/codepack/include/codepack.h
-
-
-//-publicRawBindings
+      
+-library czvode
+-I$(DIR)/../native/codeint/czvode/include
+$(DIR)/../native/codeint/czvode/include/czvode.h
+ 
+ 

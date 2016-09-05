@@ -3,5 +3,6 @@
 target
 jodeint/src/main/resources/
 jodeint/target
-
+jodeint/src/main/native/codeint
+jodeint/src/main/jnaerator/
 
