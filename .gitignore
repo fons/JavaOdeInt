@@ -1,8 +1,12 @@
 *.[oa]
 *.dylib
 target
+jodeint/src/main/java/
 jodeint/src/main/resources/
 jodeint/target
 jodeint/src/main/native/codeint
 jodeint/src/main/jnaerator/
+idea
+*.log
+*.pid
 

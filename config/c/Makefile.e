@@ -38,7 +38,7 @@ all : $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) 
 	@mkdir -p $(EXE_DIR)
-	$(CC) $(LDFLAGS)  $(OBJECTS) -Wl,-rpath=$(LIB_DIR) -o $@ -L $(LIB_DIR) $(LIBS) -lm -lgfortran 
+	$(CC) $(LDFLAGS)  $(OBJECTS)  -o $@ -L $(LIB_DIR) $(LIBS) -lm -lgfortran 
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(OBJ_DIR)

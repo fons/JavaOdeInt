@@ -218,7 +218,7 @@ jnaerator_let()
 {
 
     package=$1
-    JNAERATOR_CONFIG_PACKAGE="${JNAERATOR_CONFIG}_${package}"    
+    JNAERATOR_CONFIG_PACKAGE="${NEW_JNAERATOR_CONFIG}_${package}"    
 
     echo "// -----  generated on ${TS} by `whoami` for $package  ---------------" > $JNAERATOR_CONFIG_PACKAGE
     echo "      " >> $JNAERATOR_CONFIG_PACKAGE
@@ -320,8 +320,11 @@ make_all_c()
         if [[ "$f" != "test" ]]; then
             make_let $f
             if [[ "$f" != "codeintdeps" ]]; then
-                copy_let $f
-                jnaerator_let $f
+                echo " ==> ${JNAERATOR_CONFIG}_${f}"
+                if [[ ! -e "${JNAERATOR_CONFIG}_${f}" ]]; then
+                    copy_let $f
+                    jnaerator_let $f
+                fi
             fi
         fi 
     done
@@ -340,6 +343,10 @@ clean_all()
     echo $cmd
     eval $cmd
 
+    cmd="rm -rf $JNAERATOR/config.jnaerator*"
+    echo $cmd
+    eval $cmd
+
 }
 
 make_all()
@@ -347,10 +354,18 @@ make_all()
     make_all_f77
     make_all_c
     make_all_test
+
+    if [[  ! -e  "$RESOURCE" ]]; then
+        cmd="mkdir -p $RESOURCE"
+        echo $cmd
+        eval $cmd
+    fi
     
-    cmd="cp -R $TARGET/ $RESOURCE/"
-    echo $cmd
-    eval $cmd
+    if [[  ! -e  "$RESOURCE/lib/" ]]; then
+        cmd="cp -R $TARGET/lib $RESOURCE/lib/"
+        echo $cmd
+        eval $cmd
+    fi
 
 }
 action=$1
@@ -367,7 +382,8 @@ TS=`date +20%y%m%d_%H%M%S`
 JNAERATOR="$BASE/../main/jnaerator/"
 JNAERATOR_TARGET="$TARGET/jnaerator/"
 
-JNAERATOR_CONFIG="$BASE/../main/jnaerator/new_jnaerator.config"
+NEW_JNAERATOR_CONFIG="$BASE/../main/jnaerator/new_jnaerator.config"
+JNAERATOR_CONFIG="$BASE/../main/jnaerator/config.jnaerator"
 ROOTPACKAGE="com.kabouterlabs.jodeint"
 
 if [[ $action = "realclean" || $action = "clean" ]]; then
