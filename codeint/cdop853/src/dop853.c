@@ -65,7 +65,7 @@ static DOP853_RETVAL dop853_w(cdop853_params *params, double tnext, double* t, d
 DOP853_RETVAL dop853_basic(double* stack, double* y, dop853_ode_func f_func, int n, double xstart, double xfinal, double deltax)
 {
     
-    DOP853_RETVAL retval;
+    DOP853_RETVAL retval = SUCCESS;
     double x = xstart;
     int index = 0;
     cdop853_params* dlsop = create_basic_cdop853_params(n, f_func);

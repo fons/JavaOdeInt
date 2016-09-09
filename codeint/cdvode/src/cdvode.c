@@ -195,7 +195,7 @@ static CDVODE_ISTATE_OUT dvode_w(cdvode_params *dlsodap, double tnext, double *t
 CDVODE_ODE_RETVAL dvode_basic(double* stack, double* q, cdvode_ode_func f_func,int neq, double t0, double tf, double dt, CDVODE_METH meth)
 {
     double t;
-    CDVODE_ODE_RETVAL ode_ret;
+    CDVODE_ODE_RETVAL ode_ret = SUCCESS;
     int index = 0;
     if (valid_mf(meth, SAVE_COPY, NO_JACOBIAN) != SUCCESS) {
         fprintf(stderr, "invalid method flag...\n");

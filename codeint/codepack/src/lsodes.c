@@ -134,7 +134,7 @@ static CODEPACK_ISTATE_OUT lsodes(lsod_params *dlsodap, double tnext, double *t,
 CODEPACK_ODE_RETVAL lsodes_basic(double* stack, double* y, codepack_ode_func f_func,int neq, double t0, double tf, double dt, CODEPACK_METHOD_FLAG mf)
 {
     double t = 0.0;
-    CODEPACK_ODE_RETVAL ode_ret;
+    CODEPACK_ODE_RETVAL ode_ret = SUCCESS;
     int index = 0;
     lsod_params* dlsop = create_basic_lsodes_params(neq, f_func, mf);
 

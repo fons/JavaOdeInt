@@ -314,6 +314,12 @@ clean_all_c()
 make_all_c()
 {
 
+    if [[ ! -e $JNAERATOR ]]; then
+	cmd="mkdir -p $JNAERATOR"
+	echo $cmd
+	eval $cmd
+    fi
+
     make_let "codeintdeps"
     for f in `ls $BASE/../../../codeint/`
     do

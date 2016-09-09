@@ -1,5 +1,5 @@
 LIBNAME = czvode
-LINFLAGS =   -lzvode 
+LINFLAGS =  -l zvode
 include ../../../config/c/Makefile.f
 
 

@@ -96,7 +96,7 @@ CODEPACK_ISTATE_OUT lsodar(lsod_params *dlsodap, double tnext, double *t, double
 CODEPACK_ODE_RETVAL lsodar_basic(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt)
 {
     double t;
-    CODEPACK_ODE_RETVAL ode_ret;
+    CODEPACK_ODE_RETVAL ode_ret=SUCCESS;
     int index = 0;
     lsod_params* dlsop = create_basic_lsodar_params(neq, f_func);
     t = t0;

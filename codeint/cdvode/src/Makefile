@@ -1,5 +1,3 @@
 LIBNAME = cdvode
-
-LINFLAGS =  -l codeintdeps -ldvode
-
+LINFLAGS =  -l codeintdeps -l dvode
 include ../../../config/c/Makefile.f
