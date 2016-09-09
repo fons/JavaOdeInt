@@ -79,7 +79,7 @@ static RADAU5_RETVAL radau5_w(radau5_params* dsp, double tnext, double* t, doubl
 RADAU5_RETVAL radau5_basic(double* stack, double* y, radau5_ode_func f_func, int n, double xstart, double xfinal, double deltax)
 {
 
-    RADAU5_RETVAL retval;
+    RADAU5_RETVAL retval = SUCCESS;
     double x = xstart;
     int index = 0;
     radau5_params* dlsop = create_basic_radau5_params(n, f_func);

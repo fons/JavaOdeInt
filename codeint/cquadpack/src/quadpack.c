@@ -45,6 +45,7 @@ void free_quadpack_output(QUADPACK_OUTPUT* qpo)
     free(qpo->rlist);
     free(qpo->elist);
     free(qpo->iord);
+
     free(qpo->nnlog);
     free(qpo->chebmo);
     free(qpo->rslst);
@@ -52,8 +53,9 @@ void free_quadpack_output(QUADPACK_OUTPUT* qpo)
     free(qpo->ierlst);
     free(qpo->level);
     free(qpo->pts);
+
     free(qpo->ndin);
-    
+
 }
 
 char* log_weight_to_string(QUADPACK_LOG_WEIGHT_FUNCTION w)

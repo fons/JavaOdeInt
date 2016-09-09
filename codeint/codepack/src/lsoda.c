@@ -66,7 +66,7 @@ static CODEPACK_ISTATE_OUT lsoda(lsod_params *dlsodap, double tnext, double *t, 
 CODEPACK_ODE_RETVAL lsoda_basic(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt)
 {
     double t;
-    CODEPACK_ODE_RETVAL ode_ret;
+    CODEPACK_ODE_RETVAL ode_ret = SUCCESS;
     int index = 0;
     lsod_params* dlsop = create_basic_lsoda_params(neq, f_func);
     t = t0;

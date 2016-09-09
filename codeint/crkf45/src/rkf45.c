@@ -50,7 +50,7 @@ static RKF45_RETVAL rkf45_w(rkf45_params* params, double tnext, double* t, doubl
 RKF45_RETVAL rkf45_basic(double* stack, double* q,  rkf45_ode_func f_func,int neq, double xstart, double xfinal, double deltax)
 {
 
-    RKF45_RETVAL retval;
+    RKF45_RETVAL retval = SUCCESS;
     double x = xstart;
     int index = 0;
     rkf45_params* dlsop = create_basic_rkf45_params(neq, f_func);

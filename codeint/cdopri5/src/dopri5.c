@@ -65,7 +65,7 @@ static DOPRI5_RETVAL dopri5_w(cdopri5_params *params, double tnext, double* t, d
 DOPRI5_RETVAL dopri5_basic(double* stack, double* y, dopri5_ode_func f_func, int n, double xstart, double xfinal, double deltax)
 {
     
-    DOPRI5_RETVAL retval;
+    DOPRI5_RETVAL retval=SUCCESS;
     double x = xstart;
     int index = 0;
     stack = write_to_stack(stack, n, &index, x, y);
