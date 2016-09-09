@@ -1,9 +1,0 @@
-// -----  generated on 20160907_185456 by fons for czvode  ---------------
-      
--rootPackage com.kabouterlabs.jodeint
-      
--library czvode
--I$(DIR)/../native/codeint/czvode/include
-$(DIR)/../native/codeint/czvode/include/czvode.h
- 
- 
