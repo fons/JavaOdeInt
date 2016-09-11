@@ -23,6 +23,7 @@ ifeq ($(OS), Darwin)
      SHARED_FLAG=-shared
      LD=ld
 #     F77_LIB_DIR_OPTION=-L /usr/lib/gcc/x86_64-linux-gnu/4.8  
+     F77_LIB_DIR=$(shell dirname `gfortran -print-file-name=libgfortran.so`)
      F77_LIB_DIR_OPTION=-L $(shell dirname `gfortran -print-file-name=libgfortran.so`)
      F77_LIB_OPTION=-lgfortran
 endif
@@ -37,16 +38,15 @@ CFLAGS = -c -Wall $(INCFLAG) $(DEBUGFLAG) $(PICFLAG) $(OPTFLAG) -ftree-vectorize
 
 LIB    = $(LIB_DIR)/lib$(LIBNAME).$(SHARED_EXT)
 
+
+
 ############################
 
 all: $(LIB) 
 
 $(LIB) : $(OBJECTS)
 	@mkdir -p $(LIB_DIR)
-	$(LD) $(LDFLAGS2) -L$(LIB_DIR) $(F77_LIB_DIR_OPTION) $(F77_LIB_OPTION) $(LINFLAGS) $(SHARED_FLAG) -o $(LIB) $(OBJECTS)
-#	ld $(LDFLAGS2) $(LINFLAGS) -L$(LIB_DIR) $(SHARED_FLAG) -o $(LIB) $(OBJECTS)
-#	$(CC) $(LDFLAGS) -L$(LIB_DIR)  $(LINFLAGS) $(SHARED_FLAG) $(LDFLAGS) -o $(LIB) $(OBJECTS)
-#	$(CC) -L$(LIB_DIR)  $(LINFLAGS) $(SHARED_FLAG) $(LDFLAGS) -o $(LIB) $(OBJECTS)
+	$(LD) $(LDFLAGS) -L$(LIB_DIR) $(F77_LIB_DIR_OPTION) $(F77_LIB_OPTION) $(LINFLAGS) $(SHARED_FLAG) -o $(LIB) $(OBJECTS)
 
 $(OBJ_DIR)/%.o: %.c $(INCLUDES)
 	@mkdir -p $(OBJ_DIR)
