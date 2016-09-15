@@ -9,7 +9,7 @@ CODEPACK_ODE_RETVAL istate(CODEPACK_ISTATE_OUT istat)
         return 2;
     case SUCCESS_DONE:
         return 0;
-    case MXSTEPS_EXCEEDED:
+    case MAX_STEPS_EXCEEDED:
     case TO_MUCH_ACCURACY:
     case ILLEGAL_INPUT:
     case ERROR_TEST_FAILURES:

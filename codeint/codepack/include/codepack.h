@@ -5,7 +5,6 @@
  * function pointers compatible with the odepack 
  */
 
-
 /*
  * ode function 
  */
@@ -21,14 +20,12 @@ typedef void (*codepack_jac_func_2)(const int *neq, const double *t, const doubl
  */
 typedef void (*codepack_g_func) (const int *neq, const double *t_, const double *y, const int *ng, double *gout);
 
-
-
 typedef enum codepack_itol_e { ALL_SCALAR = 1, ATOL_ARRAY=2, RTOL_ARRAY=3, ALL_ARRAY=4} CODEPACK_ITOLERANCE;
 typedef enum codepack_itask_e {NORMAL = 1, ONESTEP_ONLY = 2, STOP_AT_FIRST_MESH = 3, NORMAL_TCRIT = 4, ONESTEP_TCRIT = 5} CODEPACK_ITASK;
 typedef enum codepack_istate_in_e {FIRST_CALL = 1, NEXT_CALL = 2, NEXT_CALL_WITH_CHANGES = 3} CODEPACK_ISTATE_IN;
 typedef enum codepack_istate_out_e { NOTHING_DONE           = 1,
                             SUCCESS_DONE           = 2,
-                            MXSTEPS_EXCEEDED       = -1,
+                            MAX_STEPS_EXCEEDED     = -1,
                             TO_MUCH_ACCURACY       = -2,
                             ILLEGAL_INPUT          = -3 ,
                             ERROR_TEST_FAILURES    = -4,
@@ -51,7 +48,7 @@ typedef enum codepack_method_e {
     BDF_USER_BAND_JAC         = 24,
     BDF_INTERNAL_BAND_JAC     = 25,
     BDF_USER_JAC_NO_IA_JA     = 121,
-    BDF_INTERNAL_JAC_IA_JA    = 122
+    BDF_INTERNAL_JAC_IA_JA    = 222
 } CODEPACK_METHOD_FLAG;
 
 typedef enum codepack_jac_type_e {USER_PROVIDED = 1, INTERNAL = 2, USER_PROVIDED_BANDED = 4, INTERNAL_BANDED = 5} CODEPACK_JAC_TYPE;

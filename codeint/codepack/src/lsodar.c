@@ -95,20 +95,45 @@ CODEPACK_ISTATE_OUT lsodar(lsod_params *dlsodap, double tnext, double *t, double
 
 CODEPACK_ODE_RETVAL lsodar_basic(double* stack, double* q, codepack_ode_func f_func,int neq, double t0, double tf, double dt)
 {
+    int max_retries = 5;
+    int retry = 0;
     double t;
+    double tnext;
     CODEPACK_ODE_RETVAL ode_ret=SUCCESS;
     int index = 0;
     lsod_params* dlsop = create_basic_lsodar_params(neq, f_func);
     t = t0;
     stack = write_to_stack(stack, neq, &index, t, q);
-    while(t < tf){    
-        CODEPACK_ISTATE_OUT ret = lsodar(dlsop, t + dt, &t, q);
-        ode_ret = istate(ret);
+
+    while(t < tf){
+        retry = 0;
+        tnext = t + dt;
+        CODEPACK_ISTATE_OUT return_code = SUCCESS_DONE;
+        do {
+            return_code = lsodar(dlsop, tnext, &t, q);
+            if (return_code == MAX_STEPS_EXCEEDED) {
+                retry++;
+                if (retry >= max_retries) {
+                    break;
+                }
+                dlsop->iopt      = OPTIONAL_INPUTS;
+                dlsop->iwork[5] += 2000;
+                dlsop->istate.istate_in = NEXT_CALL_WITH_CHANGES;
+                fprintf(stderr, "increased max steps to %d for retry %d \n", dlsop->iwork[5], retry);
+                t = tnext - dt;
+            }
+            else {
+                retry = 0;
+                break;
+            }
+        } while (retry > 0);
+        ode_ret = istate(return_code);
         if (ode_ret < 0) {
             break;
         }
         stack = write_to_stack(stack, neq, &index, t, q);
     }
+
     free_params(dlsop);
     return ode_ret;
 }
