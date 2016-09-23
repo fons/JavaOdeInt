@@ -18,11 +18,9 @@ ifeq ($(OS), Darwin)
  else
      OS_ARCH = linux_x64
      SHARED_EXT = so
-#     LDFLAGS   += -Wl,--hash-style=both,-rpath-link,$(LIB_DIR)
      LDFLAGS   = --hash-style=both -rpath-link=$(LIB_DIR)
      SHARED_FLAG=-shared
      LD=ld
-#     F77_LIB_DIR_OPTION=-L /usr/lib/gcc/x86_64-linux-gnu/4.8  
      F77_LIB_DIR=$(shell dirname `gfortran -print-file-name=libgfortran.so`)
      F77_LIB_DIR_OPTION=-L $(shell dirname `gfortran -print-file-name=libgfortran.so`)
      F77_LIB_OPTION=-lgfortran
