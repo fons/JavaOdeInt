@@ -60,7 +60,7 @@ The  __txt__ subdirectory contains the preamble of the Fortran source code. It a
    
    Contains the reference data for the Java regression tests.
    
-   + __util__ 
+   + __util__  : Utilities
    
    Contains various utilities.
  
