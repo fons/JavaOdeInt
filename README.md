@@ -2,7 +2,7 @@
 
 There is no need to reinvent the wheel when it comes to ODE solvers. 
 
-JavaOdeInt is a Java interface to a set of widely respected Fortran ODE packages. 
+JavaOdeInt provides Java bindings to a set of widely respected Fortran ODE packages. 
 These are the same packages powering Python's numpy library or  R's deSolve. 
 
 JavaOdeInt 's aim is to provide the basics from which a fully fleshed out ode solver can be constructed.
@@ -14,8 +14,11 @@ This simple C interface only requires a callback function, dimensionality, the i
 
 The C function executes a loop over the fortran function and writes the results to the user supplied  stack. It may also change some of the integration parameters if it detects that a larger number os steps are needed.
 
+Using the full Fortran interface is also possible. Each Fortran function has an extensive preamble describing its use. This was extracted from the Fortran package and put in its txt subdirectory.
 
+Regardless of the interface you need to use [bridj](https://github.com/nativelibs4java/BridJ) for memory allocation and pointer management.
 
+Both the C interface and the Java interface come with a set of tests. The tests include examples of the use of the simple and full interface.
 
 # Building
 
