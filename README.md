@@ -10,7 +10,7 @@ JavaOdeInt 's aim is to provide the basics from which a fully fleshed out ode so
 Between the Java interface and the Fortran packages sits a very thin C-layer. 
 The purpose of C interface is two-fold: To provide [bridj](https://github.com/nativelibs4java/BridJ) with a header file from which it can generate the Java classes and to provide a very simple interface to the Fortran routines.
 
-This simple C interface only requires a callback function, dimensionality, the initial conditions and the time interval, plus any additional parameters. The results are written to a user provided stack.  
+This simple C interface requires only the very basics :a callback function, the dimensionality of the ode system, the initial conditions and the time interval, plus any additional parameters. The results are written to a user provided stack.  
 
 The C function executes a loop over the fortran function and writes the results to the user supplied  stack. It may also change some of the integration parameters if it detects that a larger number os steps are needed.
 
@@ -36,21 +36,26 @@ Both the C interface and the Java interface come with a set of tests. The tests 
 
 The main directories
     
-   + fodeint
+   + __fodeint__ : The Fortran modules
    
-     Each subdirectory corresponds to one of the Fortran packages [listed below](id:fortranpackages).  This contains the fortran code. Each directory name refers to the fortran source code package. Each package directory has two sub-directories :
-     * src
-       
-       Contains the Fortran source code.
-     * txt
+     Each subdirectory corresponds to one of the Fortran packages [listed below](id:fortranpackages) and contains the Fortran source code. Each package directory has two sub-directories :
+     * __src__ which contains the Fortran source code and a Makefile.
+     * __txt__ which contains the preamble of the Fortran source code. It also contains any available  auxiliary code or driver scripts.     
+     
+ 
+   + __codeint__ : The glue
+   
+     This directory contains the C code interface. The name of the sub directory is the name of the fortran package it interfaces with preceded by a c.
+      E.g. the directory named *codepack* contains the c interface to *odepack* Fortran package.
       
-      Contains the comment section of the Fortran source code describing the usage of the Fortran code as well as other auxiliary code or driver scripts where appropriate.
-        
-   
-   + codeint
-   
-     This directory contains the C code interface. Each directory is the name of the fortran package it interfaces to preceded by a c. 
-     E.g. the directory named *codepack* contains the c interface to *odepack* Fortran package.
+      * __src__ contains the source code, internal headers plus makefile
+      * __include__ contains the header used by [bridj](https://github.com/nativelibs4java/BridJ) to generate the Java interface classes. 
+
+
+
+   + __jodeint__ : The Java interface
+    
+   This directory contains the java code and is the main build and package directory. 
 
 ## Mac OSX
   
