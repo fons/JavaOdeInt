@@ -85,10 +85,21 @@ The  __txt__ subdirectory contains the preamble of the Fortran source code. It a
  
 ## Build process
 
-The main build script is __Build.sh__ which can be found in ./src/scripts in the jodeint folder.
+The main build script is __Build.sh__ which can be found in ./src/scripts in the __jodeint__ folder.
 
-The build script executes the make file for each of the Fortran and C code packages, copies the headers and libraries to locations maven knows about, and then uses maven to run the  [bridj](https://github.com/nativelibs4java/BridJ) generator on each of the C interface header files. It does this by creating a configuration script for each package and hard linking bridj's configuration script to each one of these library specific ones.
+The build script executes the makefile for each of the Fortran and C code packages, copies the headers and libraries to locations maven knows about, and then uses maven to run the  [bridj](https://github.com/nativelibs4java/BridJ) generator on each of the C interface header files. It does this by creating a configuration script for each package and hard linking bridj's configuration script to each one of these library specific ones.
 
+## Handling Build Issues
+
+If the maven build fails, the following steps may be helpful in figuring out the isssue :
+
+1. Make sure you have met the dependencies. __gfortran__ is obviously crucial.
+2. On Linux, make sure the LD_LIBRARY_PATH is set.
+3. Run mvn clean to remove all clutter.
+4. Build a single Fortran package (say __odepack__) and verify that you have a library under *target*.
+5. Build its C interface (say __codepack__) and verify that you have its library.
+6. Build one of the C unit tests (say lsoda_simple_pendulum) and see if it run successfully. 
+7. If everything under steps 4-6 is successful execute mvn package. At this stage inspect the generated java classes.
 
 
 #[Fortran libraries covered](id:fortranpackages)
