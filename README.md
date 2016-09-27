@@ -113,14 +113,15 @@ If the maven build fails, the following steps may be helpful in figuring out the
     *  lsoda
    
     Switches automatically between nonstiff and stiff solvers depending on the behavior of the problem.
-   * lsodar
+    * lsodar
     
     Like lsoda, but includes root finding.
-    + lsode
+    
+    * lsode
     
     The user can select to run stiff or non-stiff solvers. 
     
-    + lsodes
+    * lsodes
     
     Like lsode, but assumes that the Jacobian is sparse. 
 
