@@ -108,32 +108,96 @@ If the maven build fails, the following steps may be helpful in figuring out the
 * [odepack](https://computation.llnl.gov/casc/odepack/odepack_home.html)
      
 
-  [odepack](https://computation.llnl.gov/casc/odepack/odepack_home.html) is a collection of Fortran initial value problem solvers for systems of ordinary differential equations for both stiff and nonstiff problems. The fortran package has nine solvers but only the following four routines are available :
+  [odepack](https://computation.llnl.gov/casc/odepack/odepack_home.html) is a collection of Fortran initial value problem solvers for systems of ordinary differential equations for both stiff and nonstiff problems. The fortran package has nine solvers but only the following four double precision routines are available :
       
-    *  lsoda : Switches automatically between nonstiff and stiff solvers depending on the behavior of the problem.
-    * lsodar : Like lsoda, but includes root finding.
+    *  dlsoda : Switches automatically between nonstiff and stiff solvers depending on the behavior of the problem.
+    * dlsodar : Like lsoda, but includes root finding.
     
-    * lsode : The user can select to run stiff or non-stiff solvers. 
+    * dlsode : The user can select to run stiff or non-stiff solvers. 
     
-    * lsodes : Like lsode, but assumes that the Jacobian is sparse. 
+    * dlsodes : Like lsode, but assumes that the Jacobian is sparse. 
 
 
 + [dvode](https://computation.llnl.gov/casc/odepack/odepack_home.html)
-
 + [zvode](https://computation.llnl.gov/casc/odepack/odepack_home.html)
+
+These are two initial value ODE solvers for a set of first order ode's for stiff and nonstiff problems. __dvode__ is double precision real and __zvode__ is double precision complex. 
 
 + [quadpack](https://people.sc.fsu.edu/~jburkardt/f_src/quadpack/quadpack.html)
 
+ [QUADPACK is a famous set of Fortran 77 routines dealing with integration of functions of one variable](http://nines.cs.kuleuven.be/software/QUADPACK/)
+
+
+    * DQAGPE computes a definite integral.    
+    * DQAGSE estimates the integral of a function.
+    * DQAGIE estimates an integral over a semi-infinite or infinite interval.
+    * DQAWCE computes a Cauchy principal value.
+    * DQAWFE computes Fourier integrals.
+    * DQAWOE computes the integrals of oscillatory integrands.
+    * DQAWSE estimates integrals with algebraico-logarithmic endpoint singularities.
+    
+
 + [radau5](http://www.unige.ch/~hairer/software.html)
 
+     Numerical solution of a stiff (or differential algebraic)
+     system of first order ordinary differential equations
+     
+                     m*y'=f(x,y).
+     
+     The system can be (linearly) implicit (mass-matrix != Identity Matrix)
+     or explicit (m = I).
+     The method used is an implicit runge-kutta method 
+     of order 5 with step size control and continuous output.
+   
 + [dopri5](http://www.unige.ch/~hairer/software.html)
+
+     Numerical solution of a system of first 0rder
+     ordinary differential equations  y'=f(x,y).
+     This is an explicit runge-kutta method of order (4)5
+     due to Dormand & Prince (with stepsize control and
+     dense output).
 
 + [dop853](http://www.unige.ch/~hairer/software.html)
 
+ Numerical solution of a system of first order
+    ordinary differential equations  y'=f(x,y).
+     This is an explicit runge-kutta method of order 8(5,3)
+     due to Dormand & Prince (with stepsize control and
+     dense output)
+
 + [gnicodes](http://www.unige.ch/~hairer/software.html)
 
+	* GNI_IRK2
+	
+     Solves second order ordinary differential equations of the form
+     
+                       q'' = f(x,q)
+  based on the symplectic and symmetric Gauss (irk) methods
+  described in sections ii.1, viii.6 of the book:
+
+      E. hairer, C. Lubich, G. Wanner, Geometric Numerical Integration,
+         Structure-Preserving Algorithms for ODEs.
+         Springer series in comput. math. 31, springer 2002.
+	
+    * GNI_LMM2
+
+     Solves second order ordinary differential equations of the form
+
+                       q'' = f(x,q)
+  based on symmetric linear multistep methods
+  described in chapter XIV of the book:
+
+     E. hairer, C. Lubich, G. Wanner, Geometric Numerical Integration,
+         Structure-Preserving Algorithms for ODEs.
+         Springer series in comput. math. 31, springer 2002.
+    
 + [rkf45](https://people.sc.fsu.edu/~jburkardt/f77_src/rkf45/rkf45.html)
 
+   A Fehlberg fourth-fifth order Runge-Kutta method.
+    rkf45 is primarily designed to solve non-stiff and mildly stiff
+    differential equations when derivative evaluations are inexpensive.
+    rkf45 should generally not be used when the user is demanding
+    high accuracy.
 
 #Copyright
 
