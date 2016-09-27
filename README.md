@@ -201,7 +201,7 @@ These are two initial value ODE solvers for a set of first order ode's for stiff
 
 #Copyright
 
-ttps://opensource.org/licenses/BSD-3-Clause
+https://opensource.org/licenses/BSD-3-Clause
 
 Copyright (c) 2016, JodeInt developers
 All rights reserved.
