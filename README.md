@@ -107,12 +107,15 @@ If the maven build fails, the following steps may be helpful in figuring out the
 
 * [odepack](https://computation.llnl.gov/casc/odepack/odepack_home.html)
 
-   The following routines are available :
-
+*odepack* is a collection of Fortran initial value problem solvers for systems of ordinary differential equations for both stiff and nonstiff problems. The fortran package has nine solvers but only the following four routines are available :
     * lsoda
+    Switches automatically between nonstiff and stiff solvers depending on the behavior of the problem.
     * lsodar
+    Like dlsoda, but includes root finding.
     + lsode
+    The user can select to run stiff or non-stiff solvers. 
     + lsodes
+    Like lsode, but assumes that the Jacobian is sparse. 
 
 
 + [dvode](https://computation.llnl.gov/casc/odepack/odepack_home.html)
