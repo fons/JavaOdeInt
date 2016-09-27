@@ -167,7 +167,7 @@ These are two initial value ODE solvers for a set of first order ode's for stiff
 
 + [gnicodes](http://www.unige.ch/~hairer/software.html)
 
-    * GNI_IRK2
+ * GNI_IRK2
 
      Solves second order ordinary differential equations of the form
      
@@ -179,7 +179,7 @@ These are two initial value ODE solvers for a set of first order ode's for stiff
          Structure-Preserving Algorithms for ODEs.
          Springer series in comput. math. 31, springer 2002.
 
-    * GNI_LMM2
+ * GNI_LMM2
 
      Solves second order ordinary differential equations of the form
 
