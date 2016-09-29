@@ -89,7 +89,7 @@ The main build script is __Build.sh__ which can be found in ./src/scripts in the
 
 The build script executes the makefile for each of the Fortran and C code packages, copies the headers and libraries to locations maven knows about, and then uses maven to run the  [bridj](https://github.com/nativelibs4java/BridJ) generator on each of the C interface header files. It does this by creating a configuration script for each package and hard linking bridj's configuration script to each one of these library specific ones.
 
-## Handling Build Issues
+## Trouble-Shooting Build Issues
 
 If the maven build fails, the following steps may be helpful in figuring out the isssue :
 

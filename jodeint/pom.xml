@@ -142,7 +142,7 @@
                     </configuration>
                 </execution>
             </executions>
-        </plugin> 
+                </plugin> 
             </plugins>
 	    <finalName>${project.artifactId}-${project.version}-${os.detected.classifier}</finalName>
             <testSourceDirectory>src/main/test/java</testSourceDirectory>
