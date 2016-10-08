@@ -33,7 +33,8 @@ import java.io.IOException;
 
 import java.util.List;
 
-public class CsvResultCompare {
+public class CsvResultCompare
+{
     static private double MULT = Math.log(0.50);
     static private double ZEROISH = Math.log10(Double.MIN_VALUE);
 
@@ -67,15 +68,17 @@ public class CsvResultCompare {
                 }
             }
         }
+
         return cstack;
     }
 
     static double diff(double l, double r)
     {
         if ( l == r) return 0;
-        double n = Math.log(Math.abs(l - r));
-        double d = Math.log(Math.abs(l + r));
-        double diff = Math.exp(n - d + MULT);
+        //double n = Math.log(Math.abs(l - r));
+        //double d = Math.log(Math.abs(l + r));
+        //double diff = Math.exp(n - d + MULT);
+        double diff = Math.abs(l-r);
         return diff;
     }
     static public Boolean dataEqual(double tolerance, Pointer<Double> stackptr, double t0, double tf, double dt, int neq, String fn)
@@ -89,7 +92,9 @@ public class CsvResultCompare {
         double avg  = 0;
         int    ak = 0;
         for (int i = 0; i < stack_size; i++) {
+
             double ard = diff(cstack[i], stack[i]);
+            //System.err.println(((Integer)i).toString() + "," + ((Double)cstack[i]).toString() + "," + ((Double)stack[i]).toString() +"," + ((Double)ard).toString());
             double lard = 0;//ZEROISH;
             if ( ard != 0.0) {
                 lard = Math.log10(ard);

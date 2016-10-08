@@ -35,7 +35,7 @@ public class PrintStack {
 
 
     static  String path(String fn) {
-        String p = "./target/generated-test-data/";
+        String p = "../target/test/generated-test-data/";
         Path path = Paths.get(p);
         if (Files.notExists(path)) {
             try {
@@ -55,7 +55,7 @@ public class PrintStack {
 
     static void print(Pointer<Double> stack, double t0, double tf, double dt, int neq, String fn)
     {
-
+        //System.err.println("saved data to " + fn);
         int size = (int) ((tf - t0) / dt) + 2;
         int stack_size = size * (neq + 1);
         try {

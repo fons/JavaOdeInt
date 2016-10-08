@@ -28,6 +28,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static org.bridj.Pointer.getPointer;
 import static org.bridj.Pointer.pointerToDouble;
 import static org.bridj.Pointer.pointerToDoubles;
 import static org.junit.Assert.assertEquals;
@@ -40,7 +41,7 @@ public class GniIrk2BasicSimplePendulumTest extends SimplePendulumBase {
     public void GniIrk2BasicSimplePendulum() {
 
         double t0 = 0.0;
-        double tf = 100.0;
+        double tf = 100;
         double dt = 0.1;
         int    neq = 1;
 
@@ -49,16 +50,12 @@ public class GniIrk2BasicSimplePendulumTest extends SimplePendulumBase {
         double[] qdot = new double[1];
         qdot[0] = 0.0;
 
-
-
-
         CgnicodesLibrary.gnicodes_ode_func f = new CgnicodesLibrary.gnicodes_ode_func(){
 
             @Override
             public void apply(Pointer<Integer> neq, Pointer<Double> x, Pointer<Double> q, Pointer<Double> f, Pointer<Double> rpar, Pointer<Integer> ipar) {
                 double alpha = 1;
                 f.set(0, -alpha * Math.sin(q.getDoubleAtIndex(0)));
-
             }
         };
         String name = new Object(){}.getClass().getEnclosingMethod().getName();

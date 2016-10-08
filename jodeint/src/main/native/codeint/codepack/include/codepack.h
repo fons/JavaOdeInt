@@ -1,3 +1,29 @@
+/* 
+* 
+* https://opensource.org/licenses/BSD-3-Clause
+* 
+* Copyright (c) 2016, JodeInt developers
+* All rights reserved.
+* 
+* Redistribution and use in source and binary forms, with or without modification,
+* are permitted provided that the following conditions are met:
+* 
+* 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+* 
+* 2. Redistributions in binary form must reproduce the above copyright notice, this list
+* of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+* 
+* 3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote products derived
+* from this software without specific prior written permission.
+* 
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+* BUT NOT LIMITED TO,THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL
+* THE COPYRIGHT HOLDER OR CONTRIBUTORS BELIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+* BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+* AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
+* THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+* EOM
+*/ 
 #ifndef H__CODEPACK__H
 #define H__CODEPACK__H
 
@@ -24,14 +50,15 @@ typedef enum codepack_itol_e { ALL_SCALAR = 1, ATOL_ARRAY=2, RTOL_ARRAY=3, ALL_A
 typedef enum codepack_itask_e {NORMAL = 1, ONESTEP_ONLY = 2, STOP_AT_FIRST_MESH = 3, NORMAL_TCRIT = 4, ONESTEP_TCRIT = 5} CODEPACK_ITASK;
 typedef enum codepack_istate_in_e {FIRST_CALL = 1, NEXT_CALL = 2, NEXT_CALL_WITH_CHANGES = 3} CODEPACK_ISTATE_IN;
 typedef enum codepack_istate_out_e { NOTHING_DONE           = 1,
-                            SUCCESS_DONE           = 2,
-                            MAX_STEPS_EXCEEDED     = -1,
-                            TO_MUCH_ACCURACY       = -2,
-                            ILLEGAL_INPUT          = -3 ,
-                            ERROR_TEST_FAILURES    = -4,
-                            CONVERGENCE_FAILURES   = -5,
-                            ZERO_ERR_TOLERANCE     = -6,
-                            TOO_SMALL_WORK_ARRAY   = -7 } CODEPACK_ISTATE_OUT;
+                                     SUCCESS_DONE           = 2,
+                                     ROOT_FOUND             = 3,         
+                                     MAX_STEPS_EXCEEDED     = -1,
+                                     TO_MUCH_ACCURACY       = -2,
+                                     ILLEGAL_INPUT          = -3 ,
+                                     ERROR_TEST_FAILURES    = -4,
+                                     CONVERGENCE_FAILURES   = -5,
+                                     ZERO_ERR_TOLERANCE     = -6,
+                                     TOO_SMALL_WORK_ARRAY   = -7 } CODEPACK_ISTATE_OUT;
 
 typedef enum codepack_iopt_e {NO_OPTIONAL_INPUTS = 0, OPTIONAL_INPUTS = 1} CODEPACK_OPTIONAL_INPUT_FLAG;
 typedef enum codepack_method_e {
@@ -48,7 +75,7 @@ typedef enum codepack_method_e {
     BDF_USER_BAND_JAC         = 24,
     BDF_INTERNAL_BAND_JAC     = 25,
     BDF_USER_JAC_NO_IA_JA     = 121,
-    BDF_INTERNAL_JAC_IA_JA    = 122
+    BDF_INTERNAL_JAC_IA_JA    = 222
 } CODEPACK_METHOD_FLAG;
 
 typedef enum codepack_jac_type_e {USER_PROVIDED = 1, INTERNAL = 2, USER_PROVIDED_BANDED = 4, INTERNAL_BANDED = 5} CODEPACK_JAC_TYPE;

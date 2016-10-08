@@ -50,14 +50,15 @@ typedef enum codepack_itol_e { ALL_SCALAR = 1, ATOL_ARRAY=2, RTOL_ARRAY=3, ALL_A
 typedef enum codepack_itask_e {NORMAL = 1, ONESTEP_ONLY = 2, STOP_AT_FIRST_MESH = 3, NORMAL_TCRIT = 4, ONESTEP_TCRIT = 5} CODEPACK_ITASK;
 typedef enum codepack_istate_in_e {FIRST_CALL = 1, NEXT_CALL = 2, NEXT_CALL_WITH_CHANGES = 3} CODEPACK_ISTATE_IN;
 typedef enum codepack_istate_out_e { NOTHING_DONE           = 1,
-                            SUCCESS_DONE           = 2,
-                            MAX_STEPS_EXCEEDED     = -1,
-                            TO_MUCH_ACCURACY       = -2,
-                            ILLEGAL_INPUT          = -3 ,
-                            ERROR_TEST_FAILURES    = -4,
-                            CONVERGENCE_FAILURES   = -5,
-                            ZERO_ERR_TOLERANCE     = -6,
-                            TOO_SMALL_WORK_ARRAY   = -7 } CODEPACK_ISTATE_OUT;
+                                     SUCCESS_DONE           = 2,
+                                     ROOT_FOUND             = 3,         
+                                     MAX_STEPS_EXCEEDED     = -1,
+                                     TO_MUCH_ACCURACY       = -2,
+                                     ILLEGAL_INPUT          = -3 ,
+                                     ERROR_TEST_FAILURES    = -4,
+                                     CONVERGENCE_FAILURES   = -5,
+                                     ZERO_ERR_TOLERANCE     = -6,
+                                     TOO_SMALL_WORK_ARRAY   = -7 } CODEPACK_ISTATE_OUT;
 
 typedef enum codepack_iopt_e {NO_OPTIONAL_INPUTS = 0, OPTIONAL_INPUTS = 1} CODEPACK_OPTIONAL_INPUT_FLAG;
 typedef enum codepack_method_e {

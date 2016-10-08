@@ -22,6 +22,23 @@ Both the C interface and the Java interface come with a set of tests. The tests 
 
 # Building
 
+## Prebuilt
+
+ TBA
+ 
+##Using maven
+
+### Mac OSX
+
+    cd jodeint
+    mvn clean package
+  
+### Linux
+
+    cd jodeint 
+    export LD_LIBRARY_PATH=`pwd`/src/main/resources/lib/linux_x64/:$LD_LIBRARY_PATH
+    mvn clean package
+
 ## Dependencies
 
 + [maven](https://maven.apache.org/) of version 3.1 or later
@@ -70,19 +87,6 @@ The  __txt__ subdirectory contains the preamble of the Fortran source code. It a
 
 
 
-## Mac OSX
-  
-  mvn clean package
-  
-## Linux
-
-    export LD_LIBRARY_PATH=`pwd`/src/main/resources/lib/linux_x64/:$LD_LIBRARY_PATH
-    mvn clean package
-
-## Prebuilt
-
- TBA
- 
 ## Build process
 
 The main build script is __Build.sh__ which can be found in ./src/scripts in the __jodeint__ folder.
