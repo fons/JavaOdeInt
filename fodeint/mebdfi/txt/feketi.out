@@ -1,0 +1,158 @@
+ COMPUTATIONAL STATISTICS OF THE INDEX 2 FEKETE PROBLEM USING  MEBDFI
+
+ NUMBER OF EQUATIONS : 160
+  
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000019E-01 
+ ATOL = 0.100000000000000019E-01 
+ 
+ 
+USED COMPONENTS FOR SCD                    60         60
+SCD OF Y (MAXIMUM NORM)                  3.55       2.10
+SCD OF Y (EUCLIDIAN NORM)                2.98       4.39
+USING RELATIVE ERROR YIELDS SCD :                   2.10
+ 
+ LAST STEP SIZE                         .355809D+03
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     2
+ TOTAL NUMBER OF STEPS TAKEN                  51
+ TOTAL NUMBER OF FAILED STEPS                  3
+ NUMBER OF RESIDUAL EVALUATIONS             2589
+ NUMBER OF JACOBIAN EVALUATIONS               15
+ NUMBER OF FACTORIZATION                      15
+ NUMBER OF BACKSOLVES                        173
+ NUMBER OF CORRECT DIGITS                    2.10
+ CPU TIME                                 5.7700
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016837983E-02 
+ ATOL = 0.316227766016837983E-02 
+ 
+ 
+USED COMPONENTS FOR SCD                    60         60
+SCD OF Y (MAXIMUM NORM)                  3.55       2.46
+SCD OF Y (EUCLIDIAN NORM)                3.02       5.18
+USING RELATIVE ERROR YIELDS SCD :                   2.46
+ 
+ LAST STEP SIZE                         .121170D+04
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     4
+ TOTAL NUMBER OF STEPS TAKEN                 100
+ TOTAL NUMBER OF FAILED STEPS                  1
+ NUMBER OF RESIDUAL EVALUATIONS             2907
+ NUMBER OF JACOBIAN EVALUATIONS               16
+ NUMBER OF FACTORIZATION                      16
+ NUMBER OF BACKSOLVES                        330
+ NUMBER OF CORRECT DIGITS                    2.46
+ CPU TIME                                 6.3600
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000024E-02 
+ ATOL = 0.100000000000000024E-02 
+ 
+ 
+USED COMPONENTS FOR SCD                    60         60
+SCD OF Y (MAXIMUM NORM)                  3.55       3.23
+SCD OF Y (EUCLIDIAN NORM)                3.88       7.11
+USING RELATIVE ERROR YIELDS SCD :                   3.23
+ 
+ LAST STEP SIZE                         .453891D+03
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     4
+ TOTAL NUMBER OF STEPS TAKEN                 122
+ TOTAL NUMBER OF FAILED STEPS                  1
+ NUMBER OF RESIDUAL EVALUATIONS             3306
+ NUMBER OF JACOBIAN EVALUATIONS               18
+ NUMBER OF FACTORIZATION                      18
+ NUMBER OF BACKSOLVES                        407
+ NUMBER OF CORRECT DIGITS                    3.23
+ CPU TIME                                 7.4700
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016837994E-03 
+ ATOL = 0.316227766016837994E-03 
+ 
+ 
+USED COMPONENTS FOR SCD                    60         60
+SCD OF Y (MAXIMUM NORM)                  3.55       3.45
+SCD OF Y (EUCLIDIAN NORM)                4.18       7.39
+USING RELATIVE ERROR YIELDS SCD :                   3.45
+ 
+ LAST STEP SIZE                         .235253D+04
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     4
+ TOTAL NUMBER OF STEPS TAKEN                 171
+ TOTAL NUMBER OF FAILED STEPS                  2
+ NUMBER OF RESIDUAL EVALUATIONS             3789
+ NUMBER OF JACOBIAN EVALUATIONS               20
+ NUMBER OF FACTORIZATION                      20
+ NUMBER OF BACKSOLVES                        568
+ NUMBER OF CORRECT DIGITS                    3.45
+ CPU TIME                                 8.8000
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000018E-03 
+ ATOL = 0.100000000000000018E-03 
+ 
+ 
+USED COMPONENTS FOR SCD                    60         60
+SCD OF Y (MAXIMUM NORM)                  3.55       4.81
+SCD OF Y (EUCLIDIAN NORM)                5.19      10.31
+USING RELATIVE ERROR YIELDS SCD :                   4.81
+ 
+ LAST STEP SIZE                         .108923D+04
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     5
+ TOTAL NUMBER OF STEPS TAKEN                 211
+ TOTAL NUMBER OF FAILED STEPS                  2
+ NUMBER OF RESIDUAL EVALUATIONS             4553
+ NUMBER OF JACOBIAN EVALUATIONS               24
+ NUMBER OF FACTORIZATION                      24
+ NUMBER OF BACKSOLVES                        688
+ NUMBER OF CORRECT DIGITS                    4.81
+ CPU TIME                                10.5200
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016838021E-04 
+ ATOL = 0.316227766016838021E-04 
+ 
+ 
+USED COMPONENTS FOR SCD                    60         60
+SCD OF Y (MAXIMUM NORM)                  3.55       4.71
+SCD OF Y (EUCLIDIAN NORM)                5.32      10.51
+USING RELATIVE ERROR YIELDS SCD :                   4.71
+ 
+ LAST STEP SIZE                         .139007D+04
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     5
+ TOTAL NUMBER OF STEPS TAKEN                 255
+ TOTAL NUMBER OF FAILED STEPS                  0
+ NUMBER OF RESIDUAL EVALUATIONS             4868
+ NUMBER OF JACOBIAN EVALUATIONS               25
+ NUMBER OF FACTORIZATION                      25
+ NUMBER OF BACKSOLVES                        842
+ NUMBER OF CORRECT DIGITS                    4.71
+ CPU TIME                                11.5100
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000025E-04 
+ ATOL = 0.100000000000000025E-04 
+ 
+ 
+USED COMPONENTS FOR SCD                    60         60
+SCD OF Y (MAXIMUM NORM)                  3.55       5.53
+SCD OF Y (EUCLIDIAN NORM)                6.27      12.50
+USING RELATIVE ERROR YIELDS SCD :                   5.53
+ 
+ LAST STEP SIZE                         .192697D+04
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     6
+ TOTAL NUMBER OF STEPS TAKEN                 300
+ TOTAL NUMBER OF FAILED STEPS                  1
+ NUMBER OF RESIDUAL EVALUATIONS             5175
+ NUMBER OF JACOBIAN EVALUATIONS               26
+ NUMBER OF FACTORIZATION                      26
+ NUMBER OF BACKSOLVES                        988
+ NUMBER OF CORRECT DIGITS                    5.53
+ CPU TIME                                12.8500
+ ---------------------------------------------

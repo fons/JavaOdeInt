@@ -1,0 +1,604 @@
+ COMPUTATIONAL STATISTICS OF THE INDEX 1 TRANSISTOR PROBLEM USING  MEBDFI
+
+ NUMBER OF EQUATIONS :  8
+  
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000019E-01 
+ ATOL = 0.100000000000000019E-01 
+
+
+ KFLAG = -3 FROM INTEGRATOR AT T =    .12224848E-01
+  CORRECTOR CONVERGENCE COULD NOT BE ACHIEVED
+
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5985659580737141E-02            3.37       1.12       
+  2     .3005747081999779E+01            3.11       3.59       
+  3     .2849473430456114E+01            3.31       3.77       
+  4     .2940246057785627E+01            1.86       2.33       
+  5     .2718577585278516E+01            1.86       2.29       
+  6     .2761980923317765E+01            3.84       4.29       
+  7     .4768933977322331E+01            2.70       3.38       
+  8     .1237439277010076E+01            3.35       3.45       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       1.12
+SCD OF Y (EUCLIDIAN NORM)                1.70       2.57
+USING RELATIVE ERROR YIELDS SCD :                   1.12
+ 
+ LAST STEP SIZE                         .747328D-03
+ LAST ORDER OF THE METHOD                      1
+ MAXIMUM ORDER USED SO FAR                     5
+ TOTAL NUMBER OF STEPS TAKEN                 734
+ TOTAL NUMBER OF FAILED STEPS                113
+ NUMBER OF RESIDUAL EVALUATIONS             5411
+ NUMBER OF JACOBIAN EVALUATIONS              225
+ NUMBER OF FACTORIZATION                     225
+ NUMBER OF BACKSOLVES                       3385
+ NUMBER OF CORRECT DIGITS                   1.12
+ CPU TIME                                   .390
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016837983E-02 
+ ATOL = 0.316227766016837983E-02 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5558016378370252E-02            5.38       3.13       
+  2     .3006512077139860E+01            4.98       5.46       
+  3     .2849946923929951E+01            4.93       5.38       
+  4     .2926347811984519E+01            4.13       4.59       
+  5     .2704530691819912E+01            4.06       4.49       
+  6     .2762062511817880E+01            3.65       4.09       
+  7     .4770845812018965E+01            4.09       4.77       
+  8     .1236954533949462E+01            4.38       4.48       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       3.13
+SCD OF Y (EUCLIDIAN NORM)                3.57       7.20
+USING RELATIVE ERROR YIELDS SCD :                   3.13
+ 
+ LAST STEP SIZE                         .464478D-03
+ LAST ORDER OF THE METHOD                      3
+ MAXIMUM ORDER USED SO FAR                     5
+ TOTAL NUMBER OF STEPS TAKEN                 899
+ TOTAL NUMBER OF FAILED STEPS                104
+ NUMBER OF RESIDUAL EVALUATIONS             6041
+ NUMBER OF JACOBIAN EVALUATIONS              221
+ NUMBER OF FACTORIZATION                     221
+ NUMBER OF BACKSOLVES                       4051
+ NUMBER OF CORRECT DIGITS                   3.13
+ CPU TIME                                   .420
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000024E-02 
+ ATOL = 0.100000000000000024E-02 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5560321366056147E-02            5.74       3.48       
+  2     .3006516620058059E+01            5.23       5.71       
+  3     .2849952031344959E+01            5.17       5.63       
+  4     .2926523762678294E+01            3.99       4.46       
+  5     .2704484169585792E+01            3.87       4.31       
+  6     .2761758899897010E+01            4.10       4.54       
+  7     .4771835423898626E+01            3.04       3.72       
+  8     .1236085729860387E+01            3.04       3.13       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       3.13
+SCD OF Y (EUCLIDIAN NORM)                2.89       7.09
+USING RELATIVE ERROR YIELDS SCD :                   3.13
+ 
+ LAST STEP SIZE                         .415062D-03
+ LAST ORDER OF THE METHOD                      3
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                1072
+ TOTAL NUMBER OF FAILED STEPS                 98
+ NUMBER OF RESIDUAL EVALUATIONS             6579
+ NUMBER OF JACOBIAN EVALUATIONS              224
+ NUMBER OF FACTORIZATION                     224
+ NUMBER OF BACKSOLVES                       4562
+ NUMBER OF CORRECT DIGITS                   3.13
+ CPU TIME                                   .510
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016837994E-03 
+ ATOL = 0.316227766016837994E-03 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562226174784542E-02            7.09       4.84       
+  2     .3006522611729046E+01            6.85       7.33       
+  3     .2849958937983707E+01            6.83       7.28       
+  4     .2926439074479336E+01            4.78       5.25       
+  5     .2704609696359415E+01            5.09       5.52       
+  6     .2761832435988197E+01            5.27       5.71       
+  7     .4770966454667005E+01            4.41       5.09       
+  8     .1236857946064164E+01            3.86       3.95       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       3.95
+SCD OF Y (EUCLIDIAN NORM)                3.84       9.09
+USING RELATIVE ERROR YIELDS SCD :                   3.95
+ 
+ LAST STEP SIZE                         .535047D-03
+ LAST ORDER OF THE METHOD                      6
+ MAXIMUM ORDER USED SO FAR                     6
+ TOTAL NUMBER OF STEPS TAKEN                1309
+ TOTAL NUMBER OF FAILED STEPS                126
+ NUMBER OF RESIDUAL EVALUATIONS             7819
+ NUMBER OF JACOBIAN EVALUATIONS              268
+ NUMBER OF FACTORIZATION                     268
+ NUMBER OF BACKSOLVES                       5406
+ NUMBER OF CORRECT DIGITS                   3.95
+ CPU TIME                                   .580
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000018E-03 
+ ATOL = 0.100000000000000018E-03 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5561997245286697E-02            6.83       4.58       
+  2     .3006522654821279E+01            6.74       7.22       
+  3     .2849958921941515E+01            6.88       7.33       
+  4     .2926422662549050E+01            6.90       7.36       
+  5     .2704618038209875E+01            6.76       7.19       
+  6     .2761838723675240E+01            6.02       6.47       
+  7     .4770907628088088E+01            4.70       5.38       
+  8     .1236973956799852E+01            4.66       4.75       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       4.58
+SCD OF Y (EUCLIDIAN NORM)                4.53      10.34
+USING RELATIVE ERROR YIELDS SCD :                   4.58
+ 
+ LAST STEP SIZE                         .449391D-03
+ LAST ORDER OF THE METHOD                      5
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                1481
+ TOTAL NUMBER OF FAILED STEPS                104
+ NUMBER OF RESIDUAL EVALUATIONS             8231
+ NUMBER OF JACOBIAN EVALUATIONS              246
+ NUMBER OF FACTORIZATION                     246
+ NUMBER OF BACKSOLVES                       6016
+ NUMBER OF CORRECT DIGITS                   4.58
+ CPU TIME                                   .690
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016838021E-04 
+ ATOL = 0.316227766016838021E-04 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145701160040E-02            9.16       6.91       
+  2     .3006522474903604E+01            8.52       9.00       
+  3     .2849958792044491E+01            8.46       8.92       
+  4     .2926420319799430E+01            5.65       6.12       
+  5     .2704618982485141E+01            5.95       6.38       
+  6     .2761839874168242E+01            5.68       6.12       
+  7     .4770913819399066E+01            4.86       5.54       
+  8     .1237007524164995E+01            4.93       5.03       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       5.03
+SCD OF Y (EUCLIDIAN NORM)                4.74      11.52
+USING RELATIVE ERROR YIELDS SCD :                   5.03
+ 
+ LAST STEP SIZE                         .217835D-03
+ LAST ORDER OF THE METHOD                      6
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                1867
+ TOTAL NUMBER OF FAILED STEPS                123
+ NUMBER OF RESIDUAL EVALUATIONS            10054
+ NUMBER OF JACOBIAN EVALUATIONS              297
+ NUMBER OF FACTORIZATION                     297
+ NUMBER OF BACKSOLVES                       7380
+ NUMBER OF CORRECT DIGITS                   5.03
+ CPU TIME                                   .830
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000025E-04 
+ ATOL = 0.100000000000000025E-04 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562146304782213E-02            8.89       6.63       
+  2     .3006522474056005E+01            8.67       9.15       
+  3     .2849958791496510E+01            8.54       8.99       
+  4     .2926423397239948E+01            6.06       6.53       
+  5     .2704617473546495E+01            6.41       6.84       
+  6     .2761837258807007E+01            6.28       6.73       
+  7     .4770930615392104E+01            5.53       6.20       
+  8     .1236989005168416E+01            5.16       5.26       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       5.26
+SCD OF Y (EUCLIDIAN NORM)                5.12      12.09
+USING RELATIVE ERROR YIELDS SCD :                   5.26
+ 
+ LAST STEP SIZE                         .241755D-03
+ LAST ORDER OF THE METHOD                      5
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                2032
+ TOTAL NUMBER OF FAILED STEPS                101
+ NUMBER OF RESIDUAL EVALUATIONS            10505
+ NUMBER OF JACOBIAN EVALUATIONS              289
+ NUMBER OF FACTORIZATION                     289
+ NUMBER OF BACKSOLVES                       7903
+ NUMBER OF CORRECT DIGITS                   5.26
+ CPU TIME                                   .870
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016838004E-05 
+ ATOL = 0.316227766016838004E-05 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145009460468E-02           11.55       9.30       
+  2     .3006522471908250E+01           11.28      11.76       
+  3     .2849958788618854E+01           10.97      11.42       
+  4     .2926422534422017E+01            8.75       9.21       
+  5     .2704617863001838E+01            8.70       9.13       
+  6     .2761837857423142E+01            7.10       7.54       
+  7     .4770927310171088E+01            6.49       7.17       
+  8     .1236995561240315E+01            6.51       6.61       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       6.61
+SCD OF Y (EUCLIDIAN NORM)                6.35      15.17
+USING RELATIVE ERROR YIELDS SCD :                   6.61
+ 
+ LAST STEP SIZE                         .177479D-03
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                2350
+ TOTAL NUMBER OF FAILED STEPS                 96
+ NUMBER OF RESIDUAL EVALUATIONS            11845
+ NUMBER OF JACOBIAN EVALUATIONS              306
+ NUMBER OF FACTORIZATION                     306
+ NUMBER OF BACKSOLVES                       9090
+ NUMBER OF CORRECT DIGITS                   6.61
+ CPU TIME                                  1.010
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000017E-05 
+ ATOL = 0.100000000000000017E-05 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145011081003E-02           11.93       9.67       
+  2     .3006522471902787E+01           12.59      13.07       
+  3     .2849958788608875E+01           12.13      12.58       
+  4     .2926422590333727E+01            7.27       7.73       
+  5     .2704617836637016E+01            7.55       7.98       
+  6     .2761837742942704E+01            7.45       7.89       
+  7     .4770927828351989E+01            6.71       7.38       
+  8     .1236995406848509E+01            6.34       6.43       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       6.43
+SCD OF Y (EUCLIDIAN NORM)                6.30      14.79
+USING RELATIVE ERROR YIELDS SCD :                   6.43
+ 
+ LAST STEP SIZE                         .156633D-03
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                2748
+ TOTAL NUMBER OF FAILED STEPS                123
+ NUMBER OF RESIDUAL EVALUATIONS            13662
+ NUMBER OF JACOBIAN EVALUATIONS              375
+ NUMBER OF FACTORIZATION                     375
+ NUMBER OF BACKSOLVES                      10286
+ NUMBER OF CORRECT DIGITS                   6.43
+ CPU TIME                                  1.150
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016837972E-06 
+ ATOL = 0.316227766016837972E-06 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145011333825E-02           12.03       9.78       
+  2     .3006522471901896E+01           11.94      12.42       
+  3     .2849958788607716E+01           12.38      12.84       
+  4     .2926422535446801E+01            9.12       9.59       
+  5     .2704617864300114E+01            9.15       9.58       
+  6     .2761837769969517E+01            8.07       8.52       
+  7     .4770927523871948E+01            6.97       7.65       
+  8     .1236995754037262E+01            6.94       7.04       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       7.04
+SCD OF Y (EUCLIDIAN NORM)                6.80      16.17
+USING RELATIVE ERROR YIELDS SCD :                   7.04
+ 
+ LAST STEP SIZE                         .151410D-03
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                3078
+ TOTAL NUMBER OF FAILED STEPS                106
+ NUMBER OF RESIDUAL EVALUATIONS            15246
+ NUMBER OF JACOBIAN EVALUATIONS              373
+ NUMBER OF FACTORIZATION                     373
+ NUMBER OF BACKSOLVES                      11888
+ NUMBER OF CORRECT DIGITS                   7.04
+ CPU TIME                                  1.360
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000009E-06 
+ ATOL = 0.100000000000000009E-06 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145011920519E-02           12.47      10.21       
+  2     .3006522471902747E+01           12.53      13.01       
+  3     .2849958788608310E+01           12.74      13.20       
+  4     .2926422535761504E+01            9.35       9.82       
+  5     .2704617864574862E+01            9.36       9.79       
+  6     .2761837775860422E+01            8.60       9.04       
+  7     .4770927565382466E+01            7.18       7.86       
+  8     .1236995800113962E+01            7.17       7.26       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       7.26
+SCD OF Y (EUCLIDIAN NORM)                7.02      16.69
+USING RELATIVE ERROR YIELDS SCD :                   7.26
+ 
+ LAST STEP SIZE                         .151965D-03
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                3468
+ TOTAL NUMBER OF FAILED STEPS                113
+ NUMBER OF RESIDUAL EVALUATIONS            16814
+ NUMBER OF JACOBIAN EVALUATIONS              399
+ NUMBER OF FACTORIZATION                     399
+ NUMBER OF BACKSOLVES                      13222
+ NUMBER OF CORRECT DIGITS                   7.26
+ CPU TIME                                  1.440
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016837985E-07 
+ ATOL = 0.316227766016837985E-07 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145012072461E-02           12.72      10.47       
+  2     .3006522471902687E+01           12.45      12.93       
+  3     .2849958788607849E+01           12.55      13.01       
+  4     .2926422535994774E+01            9.67      10.14       
+  5     .2704617864804173E+01            9.69      10.12       
+  6     .2761837777194868E+01            8.92       9.36       
+  7     .4770927600877848E+01            7.51       8.19       
+  8     .1236995836581925E+01            7.50       7.59       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       7.59
+SCD OF Y (EUCLIDIAN NORM)                7.36      17.45
+USING RELATIVE ERROR YIELDS SCD :                   7.59
+ 
+ LAST STEP SIZE                         .124481D-03
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                4022
+ TOTAL NUMBER OF FAILED STEPS                116
+ NUMBER OF RESIDUAL EVALUATIONS            18821
+ NUMBER OF JACOBIAN EVALUATIONS              441
+ NUMBER OF FACTORIZATION                     441
+ NUMBER OF BACKSOLVES                      14851
+ NUMBER OF CORRECT DIGITS                   7.59
+ CPU TIME                                  1.640
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000019E-07 
+ ATOL = 0.100000000000000019E-07 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145011824422E-02           12.36      10.10       
+  2     .3006522471902924E+01           12.93      13.41       
+  3     .2849958788608316E+01           12.73      13.18       
+  4     .2926422536430186E+01            9.65      10.12       
+  5     .2704617865237965E+01            9.64      10.08       
+  6     .2761837777600533E+01            9.10       9.54       
+  7     .4770927663866500E+01            7.49       8.17       
+  8     .1236995899956322E+01            7.50       7.59       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       7.59
+SCD OF Y (EUCLIDIAN NORM)                7.34      17.44
+USING RELATIVE ERROR YIELDS SCD :                   7.59
+ 
+ LAST STEP SIZE                         .656088D-04
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                4592
+ TOTAL NUMBER OF FAILED STEPS                 97
+ NUMBER OF RESIDUAL EVALUATIONS            21022
+ NUMBER OF JACOBIAN EVALUATIONS              488
+ NUMBER OF FACTORIZATION                     488
+ NUMBER OF BACKSOLVES                      16629
+ NUMBER OF CORRECT DIGITS                   7.59
+ CPU TIME                                  1.940
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016837994E-08 
+ ATOL = 0.316227766016837994E-08 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145012306068E-02           13.36      11.11       
+  2     .3006522471902889E+01           12.81      13.29       
+  3     .2849958788608088E+01           13.40      13.85       
+  4     .2926422536161331E+01           10.35      10.81       
+  5     .2704617864966085E+01           10.35      10.78       
+  6     .2761837778271225E+01            9.91      10.36       
+  7     .4770927624045870E+01            8.12       8.80       
+  8     .1236995860457651E+01            8.12       8.21       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       8.21
+SCD OF Y (EUCLIDIAN NORM)                7.97      18.87
+USING RELATIVE ERROR YIELDS SCD :                   8.21
+ 
+ LAST STEP SIZE                         .698130D-04
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                5166
+ TOTAL NUMBER OF FAILED STEPS                 95
+ NUMBER OF RESIDUAL EVALUATIONS            23487
+ NUMBER OF JACOBIAN EVALUATIONS              536
+ NUMBER OF FACTORIZATION                     536
+ NUMBER OF BACKSOLVES                      18662
+ NUMBER OF CORRECT DIGITS                   8.21
+ CPU TIME                                  2.060
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000027E-08 
+ ATOL = 0.100000000000000027E-08 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145012229551E-02           13.48      11.22       
+  2     .3006522471902993E+01           13.32      13.79       
+  3     .2849958788608117E+01           13.95      14.41       
+  4     .2926422536217752E+01           10.94      11.41       
+  5     .2704617865022501E+01           10.92      11.35       
+  6     .2761837778304351E+01           10.05      10.49       
+  7     .4770927633155206E+01            8.81       9.49       
+  8     .1236995869586926E+01            8.83       8.92       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86       8.92
+SCD OF Y (EUCLIDIAN NORM)                8.67      20.50
+USING RELATIVE ERROR YIELDS SCD :                   8.92
+ 
+ LAST STEP SIZE                         .286750D-04
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                5952
+ TOTAL NUMBER OF FAILED STEPS                110
+ NUMBER OF RESIDUAL EVALUATIONS            25877
+ NUMBER OF JACOBIAN EVALUATIONS              624
+ NUMBER OF FACTORIZATION                     624
+ NUMBER OF BACKSOLVES                      20260
+ NUMBER OF CORRECT DIGITS                   8.92
+ CPU TIME                                  2.400
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.316227766016838004E-09 
+ ATOL = 0.316227766016838004E-09 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145012259154E-02           14.45      12.19       
+  2     .3006522471903041E+01           15.05      15.53       
+  3     .2849958788608131E+01           14.51      14.96       
+  4     .2926422536206952E+01           12.15      12.61       
+  5     .2704617865011402E+01           12.07      12.50       
+  6     .2761837778375304E+01           10.75      11.19       
+  7     .4770927631716530E+01           10.00      10.68       
+  8     .1236995868180577E+01           10.05      10.14       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86      10.14
+SCD OF Y (EUCLIDIAN NORM)                9.87      23.31
+USING RELATIVE ERROR YIELDS SCD :                  10.14
+ 
+ LAST STEP SIZE                         .446470D-04
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                6683
+ TOTAL NUMBER OF FAILED STEPS                 89
+ NUMBER OF RESIDUAL EVALUATIONS            28284
+ NUMBER OF JACOBIAN EVALUATIONS              656
+ NUMBER OF FACTORIZATION                     656
+ NUMBER OF BACKSOLVES                      22379
+ NUMBER OF CORRECT DIGITS                  10.14
+ CPU TIME                                  2.670
+ ---------------------------------------------
+ RESULT WITH THE FOLLOWING TOL :
+ RTOL = 0.100000000000000029E-09 
+ ATOL = 0.100000000000000029E-09 
+ 
+ NUMERICAL SOLUTION
+ 
+                                               SCD
+     SOLUTION COMPONENT                  -------------    IGNOR
+                                         ABS        REL 
+  1    -.5562145012262895E-02           15.73      13.48       
+  2     .3006522471903045E+01           14.45      14.93       
+  3     .2849958788608132E+01           14.40      14.85       
+  4     .2926422536206990E+01           12.13      12.59       
+  5     .2704617865011290E+01           12.13      12.57       
+  6     .2761837778388760E+01           11.36      11.80       
+  7     .4770927631712034E+01           10.02      10.70       
+  8     .1236995868184610E+01           10.03      10.12       
+ 
+USED COMPONENTS FOR SCD                     8          8
+SCD OF Y (MAXIMUM NORM)                  1.86      10.12
+SCD OF Y (EUCLIDIAN NORM)                9.88      23.28
+USING RELATIVE ERROR YIELDS SCD :                  10.12
+ 
+ LAST STEP SIZE                         .363396D-04
+ LAST ORDER OF THE METHOD                      7
+ MAXIMUM ORDER USED SO FAR                     7
+ TOTAL NUMBER OF STEPS TAKEN                7767
+ TOTAL NUMBER OF FAILED STEPS                 54
+ NUMBER OF RESIDUAL EVALUATIONS            32162
+ NUMBER OF JACOBIAN EVALUATIONS              713
+ NUMBER OF FACTORIZATION                     713
+ NUMBER OF BACKSOLVES                      25744
+ NUMBER OF CORRECT DIGITS                  10.12
+ CPU TIME                                  3.110
+ ---------------------------------------------
