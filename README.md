@@ -8,17 +8,34 @@ These are the same packages powering Python's numpy library or  R's deSolve.
 JavaOdeInt 's aim is to provide the basics from which a fully fleshed out ode solver can be constructed.
 
 Between the Java interface and the Fortran packages sits a very thin C-layer. 
-The purpose of C interface is two-fold: To provide [bridj](https://github.com/nativelibs4java/BridJ) with a header file from which it can generate the Java classes and to provide a very simple interface to the Fortran routines.
+The purpose of C interface is two-fold: To provide [bridj](https://github.com/nativelibs4java/BridJ) with a header file from which it can generate the Java classes and to provide a very basic interface to the Fortran routines.
 
-This simple C interface requires only the very basics :a callback function, the dimensionality of the ode system, the initial conditions and the time interval, plus any additional parameters. The results are written to a user provided stack.  
+#Interfaces 
 
-The C function executes a loop over the fortran function and writes the results to the user supplied  stack. It may also change some of the integration parameters if it detects that a larger number os steps are needed.
+##Basic Interface
 
-Using the full Fortran interface is also possible. Each Fortran function has an extensive preamble describing its use. This was extracted from the Fortran package and put in its txt subdirectory.
+ 
+The name of the basic interface is that of the encapsulated Fortran function followed by `_basic`, e.g. `lsoda_basic`. It's purpose is to get up and running with a basic set of defaults.
+
+The basic C interface requires a callback function, the dimensionality of the ode system, the initial conditions and the time interval, plus any additional parameters. The results are written to a user provided stack.  
+
+The C function executes a loop over the Fortran function and writes the results to the user supplied  stack. It may also change some of the integration parameters. For example if it detects that the integration requires a larger number of steps that parameter is increased.
+
+##Full Interface
+
+
+Using the full Fortran interface is also possible. This exposes all the capabilities of the Fortran code.
+
+Each Fortran function has an extensive preamble describing its use. This was extracted from the Fortran package and put in the txt subdirectory. It is strongly recommended to consult this.
+
+## [bridj](https://github.com/nativelibs4java/BridJ)
 
 Regardless of the interface you need to use [bridj](https://github.com/nativelibs4java/BridJ) for memory allocation and pointer management.
 
-Both the C interface and the Java interface come with a set of tests. The tests include examples of the use of the simple and full interface.
+##Examples
+ 
+
+Both the C interface and the Java interface come with a set of tests. The tests include examples of the use of the basic and full interface.
 
 # Building
 
@@ -155,10 +172,10 @@ These are two initial value ODE solvers for a set of first order ode's for stiff
    
 + [dopri5](http://www.unige.ch/~hairer/software.html)
 
-     Numerical solution of a system of first 0rder
+     Numerical solution of a system of first order
      ordinary differential equations  y'=f(x,y).
      This is an explicit runge-kutta method of order (4)5
-     due to Dormand & Prince (with stepsize control and
+     due to Dormand & Prince (with step-size control and
      dense output).
 
 + [dop853](http://www.unige.ch/~hairer/software.html)
@@ -166,7 +183,7 @@ These are two initial value ODE solvers for a set of first order ode's for stiff
  Numerical solution of a system of first order
     ordinary differential equations  y'=f(x,y).
      This is an explicit runge-kutta method of order 8(5,3)
-     due to Dormand & Prince (with stepsize control and
+     due to Dormand & Prince (with step-size control and
      dense output)
 
 + [gnicodes](http://www.unige.ch/~hairer/software.html)

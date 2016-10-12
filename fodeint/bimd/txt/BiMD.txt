@@ -1,0 +1,729 @@
+C -----------------------------------------------------------------------------------
+C     THE CODE BIMD NUMERICALLY SOLVES (STIFF) DIFFERENTIAL ODE 
+C     PROBLEMS OR LINEARLY IMPLICIT DAE PROBLEMS OF INDEX UP TO 3 
+C     WITH CONSTANT MASS MATRIX
+C
+C     Copyright (C)2005-2007   
+C
+C     Authors: CECILIA MAGHERINI (cecilia.magherini@ing.unipi.it)
+C              LUIGI   BRUGNANO  (brugnano@math.unifi.it) 
+C
+C
+C     This program is free software; you can redistribute it and/or
+C     modify it under the terms of the GNU General Public License
+C     as published by the Free Software Foundation; either version 2
+C     of the License, or (at your option) any later version.
+C
+C     This program is distributed in the hope that it will be useful,
+C     but WITHOUT ANY WARRANTY; without even the implied warranty of
+C     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+C     GNU General Public License for more details.
+C
+C     Licensed under The GNU General Public License, Version 2 or later.
+C       http://www.gnu.org/licenses/info/GPLv2orLater.html
+C
+C     You should have received a copy of the GNU General Public License
+C     along with this program; if not, write to the Free Software
+C     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+C     USA.
+C -----------------------------------------------------------------------------------
+
+
+      SUBROUTINE BIMD(M,FCN,T0,TEND,Y0,H,
+     &                RTOL,ATOL,ITOL,
+     &                JAC,IJAC,MLJAC,MUJAC,
+     &                MAS,IMAS,MLMAS,MUMAS,
+     &                SOLOUT,IOUT,
+     &                WORK,LWORK,IWORK,LIWORK,
+     &                RPAR,IPAR,IDID)
+
+C -----------------------------------------------------------------------------------
+C -----------------------------------------------------------------------------------
+C
+C     PURPOSE:    BIMD SOLVES A (STIFF) DIFFERENTIAL ODE PROBLEM,
+C     --------
+C                               Y'    = F(T,Y),     T0<=T<=TEND,
+C                               Y(T0) = Y0,
+C
+C                 OR A LINEARLY IMPLICIT DAE PROBLEM OF INDEX UP TO 3 WITH
+C                 CONSTANT MASS MATRIX, NAMELY PROBLEM IN THE FORM
+C
+C                 M Y'  = F(T,Y),     T0<=T<=TEND,
+C                 Y(T0) = Y0,
+C
+C                 WHERE M IS A POSSIBLY SINGULAR MATRIX.
+C
+C                 THE CODE IS BASED ON BLENDED IMPLICIT METHODS.
+C                 BLENDED IMPLICIT METHODS ARE A CLASS OF BLOCK
+C                 METHODS       PROVIDING A (RELATIVELY) EASY DEFINITION
+C                 OF SUITABLE NONLINEAR SPLITTINGS FOR SOLVING THE
+C                 CORRESPONDING DISCRETE PROBLEMS [1,5-7].
+C                 THE CODE BIMD IMPLEMENTS A VARIABLE STEPSIZE-
+C                 VARIABLE ORDER METHOD. ORDERS: 4-6-8-10-12.
+C                 IMPLEMENTATION DETAILS ARE IN REFERENCES [1-5].
+C
+C
+C
+C     AUTHORS:    C.MAGHERINI, 
+C     --------    DIPARTIMENTO DI MATEMATICA 
+C                 VIA BUONARROTI, 1/C 
+C                 56127 PISA
+C                 ITALY
+C                 E-MAIL: CECILIA.MAGHERINI@UNIPI.IT
+C
+C                 L.BRUGNANO,
+C                 DIPARTIMENTO DI MATEMATICA E INFORMATICA "U.DINI"
+C                 VIALE MORGAGNI 67/A
+C                 50134 FIRENZE
+C                 ITALY
+C                 E-MAIL: LUIGI.BRUGNANO@UNIFI.IT
+C
+C     CODE HOME PAGE:   http://www.math.unifi.it/~brugnano/BiM/index.html
+C     ---------------
+C
+C     CODE:       THE CODE IS MADE UP OF TWO FILES:
+C     -----        - BIMD.F     (I.E. THE PRESENT FILE) WHICH CONTAINS THE MAIN
+C                    INTEGRATION PROCEDURE
+C                  - BIMDA.F    CONTAINING ADDITIONAL AND LINEAR ALGEBRA
+C                    PROCEDURES
+C
+C     CURRENT RELEASE:   1.1.2,  November, 2014.
+C     ----------------
+C
+C     RELEASE HISTORY:   1.0,  October, 2005
+C     ---------------    - first version released;
+C                        
+C                        1.1,  July, 2006
+C                        Main features (wrt 1.0):
+C                        - improved definition of the 
+C                          coefficients of the methods
+C                        - the results described
+C                          in reference [1], have been better
+C                          exploited for the definition of 
+C                          the stopping criterion for
+C                          the splitting Newton blended iteration
+C                        - improved choice of the initial profile
+C                          after a failure due to Newton convergence
+C                        - possibility of solving the problem
+C                          with vector-valued absolute input
+C                          tolerances
+C                        - new function CONTSOL, to be used when
+C                          continuous output is desired
+C                        - minor changes concerning the
+C                          order variation strategy.
+C 
+C                        1.1.1, September, 2006
+C                        - some minor bugs fixed
+C                 
+C                        1.1.2, November, 2014
+C                        - some minor bugs fixed
+C                          
+C                             
+C
+C     REFERENCES:
+C     -----------
+C                 [1] L.BRUGNANO, C.MAGHERINI, F.MUGNAI.
+C                     Blended Implicit Methods for the Numerical Solution
+C                     of DAE problems.
+C                     Jour. CAM 189 (2006) 34-50.
+C
+C                 [2] L.BRUGNANO, C.MAGHERINI
+C                     The BiM code for the numerical solution of ODEs
+C                     Jour. CAM 164-165 (2004) 145-158.
+C
+C                 [3] L.BRUGNANO, C.MAGHERINI
+C                     Some Linear Algebra issues concerning the implementation
+C                     of Blended Implicit Methods
+C                     Numer. Linear Alg. Appl. 12 (2005) 305-314.
+C
+C                 [4] L.BRUGNANO, C.MAGHERINI
+C                     Economical Error Estimates for Block Implicit Methods for
+C                     ODEs via Deferred Correction.
+C                     Appl. Numer. Math. 56 (2006) 608-617.
+C
+C                 [5] L.BRUGNANO, C.MAGHERINI
+C                     Blended Implementation of Block Implicit Methods for ODEs
+C                     Appl. Numer. Math. 42 (2002) 29-45.
+C
+C                 [6] L.BRUGNANO, D.TRIGIANTE
+C                     Block Implicit Methods for ODEs
+C                     in "Recent Trends in Numerical Analysis", D.Trigiante Ed.
+C                     Nova Science Publ. Inc., New York, 2001, pp. 81-105.
+C
+C                 [7] L.BRUGNANO
+C                     Blended Block BVMs (B$_3$VMs): a Family of economical
+C                     implicit methods for ODEs
+C                     Jour. CAM 116 (2000) 41-62.
+C
+C
+C
+C    REMARK:   The code BiMD has been written using a style very similar to the one
+C    -------   used in the codes RADAU and GAM. Indeed, some subroutines and comments 
+C              have been imported from such codes. Moreover, the name and the meaning
+C              of a number of input parameters and variables have been fully inherited 
+C              from them.
+C               
+C -----------------------------------------------------------------------------------
+C -----------------------------------------------------------------------------------
+C
+C     USAGE:
+C     ------
+C
+C      CALL BIMD(M,FCN,T0,TEND,Y0,H,
+C     &          RTOL,ATOL,ITOL,
+C     &          JAC,IJAC,MLJAC,MUJAC,
+C     &          MAS,IMAS,MLMAS,MUMAS,
+C     &          SOLOUT,IOUT,
+C     &          WORK,LWORK,IWORK,LIWORK,
+C     &          RPAR,IPAR,IDID)
+C
+C     NOTE:   IN ORDER TO GAIN THE BEST PERFORMANCE, THE EXECUTABLE HAS TO
+C     -----   BE CREATED WITH THE OPTION ALLOWING  TO CONTINUE THE EXECUTION
+C             AFTER A FLOATING-POINT EXCEPTION  (E.G., BY USING THE OPTION
+C             -FPE; SEE YOUR FORTRAN COMPILER REFERENCE MANUAL).
+C                       THE ISNAN LOGICAL FUNCTION IS REQUIRED, TO RECOGNIZE NANs. IF
+C                       NOT SUPPORTED BY YOUR COMPILER, A STANDARD ONE IS PROVIDED AT
+C                       THE TOP OF THE SUBBIM.F FILE.
+C
+C
+C -----------------------------------------------------------------------------------
+C           INPUT PARAMETERS
+C -----------------------------------------------------------------------------------
+C
+C M             SIZE OF THE PROBLEM
+C
+C FCN           SUBROUTINE WITH THE FUNCTION F(T,Y) TO BE INTEGRATED.
+C
+C
+C      subroutine fcn(m,t,y,dy,ierr,rpar,ipar)
+C      double precision t,y,dy,rpar(*)
+C      integer m,ierr,ipar(*)
+C      dimension y(m),dy(m)
+CC     m      size of the continuous problem
+CC     t,y    is the point where f is evaluated
+CC     dy     will contain the value of f(t,y)
+CC     ierr   is a return code (0 means OK)
+CC     rpar   possible external real parameters
+CC     ipar   possible external integer parameters
+C      ................
+C      return
+C      end
+C
+C T0-TEND       INTEGRATION INTERVAL
+C
+C Y0            INITIAL CONDITION
+C
+C H             INITIAL STEPSIZE
+C
+C RTOL-ATOL     RELATIVE AND ABSOLUTE TOLERANCES. 
+C               ATOL CAN BE EITHER SCALAR OR A 
+C               VECTOR OF LENGTH M.
+C 
+C ITOL          SWITCH FOR ATOL:
+C               
+C               ITOL = 0 --> ATOL IS SCALAR. 
+C                            THE CODE PROVIDES A NUMERICAL SOLUTION 
+C                            WITH THE LOCAL ERROR OF Y(I) ROUGHLY SMALLER 
+C                            THAN ATOL + RTOL*ABS(Y(I))   
+C                        
+C               ITOL = 1 --> ATOL IS AN ARRAY OF LENGTH M 
+C                            THE LOCAL ERROR OF Y(I) IS KEPT
+C                            BELOW ATOL(I) + RTOL*ABS(Y(I))   
+C
+C JAC           SUBROUTINE EVALUATING THE JACOBIAN OF F (DUMMY, IF IJAC=0)
+C
+C
+C      subroutine jac(m,t,y,jac,ldjac,ierr,rpar,ipar)
+C      double precision t,y,jac,rpar(*)
+C      integer m,ldjac,ierr,ipar(*)
+C      dimension y(m),jac(ldjac,m)
+CC     m      size of the continuous problem
+CC     t,y      is the point where the Jacobian is evaluated
+CC     jac      will contain the value of the Jacobian at (t,y)
+CC     ldjac  leading dimension of the array jac
+CC     ierr     is a return code (0 means OK)
+CC     rpar   possible external real parameters
+CC     ipar     possible external integer parameters
+C      ............
+C      return
+C      end
+C
+C IJAC          FLAG: 0=NUMERICAL JACOBIAN, ANALYTICAL OTHERWISE
+C
+C MLJAC-MUJAC   LOWER-UPPER BANDWIDTH OF THE JACOBIAN (MLJAC=M IF FULL JACOBIAN)
+C
+C MAS           SUBROUTINE EVALUATING THE MASS-MATRIX (DUMMY, IF IMAS=0)
+C
+C
+C      subroutine mas(m,mas,ldmas,ierr,rpar,ipar)
+C      double precision mas,rpar(*)
+C      integer m,ldmas,ierr,ipar(*)
+C      dimension mas(ldmas,m)
+CC     m      size of the continuous problem
+CC     mas    will contain the evaluated mass-matrix
+CC     ldmas  leading dimension of the array mas
+CC     ierr     is a return code (0 means OK)
+CC     rpar   possible external real parameters
+CC     ipar     possible external integer parameters
+C      ..............
+C      return
+C      end
+C
+C
+C IMAS            FLAG: 0=ODE, DAE OTHERWISE
+C
+C MLMAS-MUMAS     LOWER-UPPER BANDWIDTH OF THE MASS-MATRIX (MLMAS=M IF FULL MASS-MATRIX)
+C                 MLMAS IS SUPPOSED TO BE .LE. MLJAC
+C                 MUMAS IS SUPPOSED TO BE .LE. MUJAC.
+C
+C LWORK   LENGTH OF WORK   ( LWORK >= 14 +KMAX +9*M +5*KMAX*M +M*(LDJAC+LDLU+LDMAS),
+C
+C         WHERE:
+C
+C                            LDJAC = LDLU = M,            IN CASE OF A FULL JACOBIAN,
+C            LDJAC = MLJAC+MUJAC+1,  LDLU = LDJAC+MLJAC,  IN CASE OF A BANDED JACOBIAN;
+C
+C                            LDMAS = M                    IN CASE OF A FULL MASS MATRIX,
+C                            LDMAS = MLMAS+MUMAS+1        IN CASE OF A BANDED MASS MATRIX,
+C                            LDMAS = 1                    IN THE ODE CASE (I.E. IMAS = 0)
+C
+C                             KMAX = ORDMAX-2,            IF ORDMAX>4,
+C                                    3,                   IF ORDMAX=4. )
+C
+C WORK(1)   UROUND. MACHINE PRECISION. (DEFAULT = 1.D-16)
+C
+C WORK(2)   HMAX. MAXIMUM INTEGRATION STEP. (DEFAULT = (TEND-T0)/8)
+C
+C WORK(3)   FACTOL - SAFETY FACTOR FOR THE STOPPING CRITERION OF THE BLENDLED ITERATION.
+C           METHOD OF ORDER 4. (DEFAULT = 1.D-1)
+C
+C WORK(4)   FACTOL - SAFETY FACTOR FOR THE STOPPING CRITERION OF THE BLENDLED ITERATION.
+C           METHOD OF ORDER 6. (DEFAULT = 1.D-1)
+C
+C WORK(5)   FACTOL - SAFETY FACTOR FOR THE STOPPING CRITERION OF THE BLENDLED ITERATION.
+C           METHOD OF ORDER 8. (DEFAULT = 1.D-1)
+C
+C WORK(6)   FACTOL - SAFETY FACTOR FOR THE STOPPING CRITERION OF THE BLENDLED ITERATION.
+C           METHOD OF ORDER 10. (DEFAULT = 1.D-1)
+C
+C WORK(7)   FACTOL - SAFETY FACTOR FOR THE STOPPING CRITERION OF THE BLENDLED ITERATION.
+C           METHOD OF ORDER 12. (DEFAULT = 1.D-1)
+C
+C WORK(8)   FACTOL - SAFETY FACTOR FOR THE STOPPING CRITERION OF THE BLENDLED ITERATION
+C           IN CASE OF SMALL VALUES OF min(abs(y_0)), min(abs(f_0)) AND OF max(abs(f_0)).
+C           (DEFAULT = 1D-2)
+C
+C WORK(9)   FACTOL - SAFETY FACTOR FOR THE STOPPING CRITERION OF THE BLENDLED ITERATION
+C           IN CASE OF SLOWLY VARYING. (DEFAULT = 5D-2)
+C
+C WORK(10)-WORK(11)  FACL-FACR. THE NEW STEPSIZE MUST SATISFY FACL<=HNEW/HOLD<= FACR.
+C           (DEFAULT: WORK(10)=1.2D-1, WORK(11)=1D1)
+C
+C WORK(12)  SFTY - SAFETY FACTOR FOR PREDICTING THE NEW STEPSIZE FOR THE CURRENT ORDER
+C           METHOD. (DEFAULT = 1D0/2D1)
+C
+C WORK(13)  SFTYUP - SAFETY FACTOR FOR PREDICTING THE NEW STEPSIZE FOR THE HIGHER ORDER
+C           METHOD. (DEFAULT = SFTY/2D0)
+C
+C WORK(14)  SFTYDN - SAFETY FACTOR FOR PREDICTING THE NEW STEPSIZE FOR THE LOWER ORDER
+C           METHOD. (DEFAULT = SFTY)
+C
+C LIWORK    LENGTH OF IWORK  (LIWORK >= M+40)
+C
+C IWORK( 1) MAX NUMBER OF INTEGRATION STEPS (DEFAULT = 100000).
+C
+C IWORK( 2) ORDMIN, 4<=ORDMIN<=12. (DEFAULT = 4).
+C
+C IWORK( 3) ORDMAX, ORDMIN<=ORDMAX<=12. (DEFAULT = 12).
+C
+C IWORK( 4) MAX NUMBER OF BLENDED ITERATIONS PER INTEGRATION STEP, METHOD OF ORDER 4
+C           (DEFAULT = 10).
+C
+C IWORK( 5) MAX NUMBER OF BLENDED ITERATIONS PER INTEGRATION STEP, METHOD OF ORDER 6
+C           (DEFAULT = 12).
+C
+C IWORK( 6) MAX NUMBER OF BLENDED ITERATIONS PER INTEGRATION STEP, METHOD OF ORDER 8
+C           (DEFAULT = 14).
+C
+C IWORK( 7) MAX NUMBER OF BLENDED ITERATIONS PER INTEGRATION STEP, METHOD OF ORDER 10
+C           (DEFAULT = 16).
+C
+C IWORK( 8) MAX NUMBER OF BLENDED ITERATIONS PER INTEGRATION STEP, METHOD OF ORDER 12
+C           (DEFAULT = 18).
+C
+C IWORK( 9) DIMENSION OF THE INDEX 1 VARIABLES (DEFAULT = M).
+C           IT MUST BE GREATER THAN 0.
+C
+C IWORK(10) DIMENSION OF THE INDEX 2 VARIABLES (DEFAULT = 0).
+C
+C IWORK(11) DIMENSION OF THE INDEX 3 VARIABLES (DEFAULT = 0).
+C
+C REMARK: THE VARIABLES MUST BE SORTED BY INCREASING INDEX.
+C -------
+C
+C RPAR,IPAR  REAL AND INTEGER PARAMETERS (OR PARAMETER ARRAYS) WHICH
+C            CAN BE USED FOR COMMUNICATION BETWEEN YOUR CALLING
+C            PROGRAM AND THE FCN, JAC, MAS AND SOLOUT SUBROUTINES.
+C
+C SOLOUT     NAME (EXTERNAL) OF SUBROUTINE PROVIDING THE NUMERICAL
+C            SOLUTION DURING INTEGRATION. 
+C            IF IOUT = 1, IT IS CALLED AFTER EACH SUCCESSFUL STEP.  
+C            SUPPLY A DUMMY SUBROUTINE IF IOUT = 0.
+C            IT MUST HAVE THE FOLLOWING FORM:
+C
+C      subroutine solout(m,k,ord,t0,t,y,f,dd,rpar,ipar,irtrn)
+C      integer m,k,ord,irtrn,ipar(*)
+C      double precision t0,t,y,f,dd, rpar(*)
+C      dimension t(k),y(m,k),f(m,k),dd(k+1,m)
+C
+CC     m                is the size of the problem
+CC     k                is the block-size of the method
+CC     ord              is the order of the method
+CC     t0               is the starting time point of the step
+CC     t                contains the (internal) mesh points of 
+CC                      the step
+CC     y                is the current numerical solution
+CC     f                contains the values of fcn(t,y)
+CC     dd               contains the divided differences of y 
+CC                      over the internal mesh points of the step
+CC                      (to be used, for example, if continuous 
+CC                      output is desired, see below)
+CC     rpar             possible external real parameters
+CC     ipar             possible external integer parameters
+CC     irtrn            is a return code. If set <0, BiMD returns
+CC                      to the calling program.
+C
+C      ................
+C      return
+C      end
+C
+C
+C           CONTINUOUS OUTPUT:
+C           ------------------
+C
+C           DURING CALLS TO SOLOUT, A CONTINUOUS SOLUTION 
+C           FOR THE INTERVAL [t0,t(k)] IS AVAILABLE THROUGH
+C           THE FUNCTION
+C
+C               CONTSOL(I,T,M,K,T0,TSTEP,DD)
+C
+C           WHICH PROVIDES AN APPROXIMATION TO THE I-TH
+C           COMPONENT OF THE SOLUTION AT THE TIME POINT T.
+C
+C
+C IOUT      SWITCH FOR CALLING THE SUBROUTINE SOLOUT.
+C          
+C           IOUT = 0, SOLOUT IS NEVER CALLED
+C           IOUT = 1, SOLOUT IS CALLED AFTER EACH 
+C                     SUCCESSFULL STEP         
+C
+C
+C
+C -----------------------------------------------------------------------------------
+C           OUTPUT PARAMETERS
+C -----------------------------------------------------------------------------------
+C
+C
+C T0        VALUE OF T UP TO WHERE THE SOLUTION HAS BEEN COMPUTED
+C           (IF THE INTEGRATION HAS BEEN SUCCESFULL,THEN T0=TEND)
+C
+C Y0        NUMERICAL SOLUTION AT T0
+C
+C IDID      RETURN CODE:
+C              0  SUCCESFULL RUN
+C             -1  WRONG INPUT PARAMETERS
+C             -2  LARGER NMAX IS NEEDED
+C             -3  STEPSIZE TOO SMALL
+C             -4  REPEATEDLY SINGULAR MATRIX
+C             -5  TOO MANY CONSECUTIVE NEWTON FAILURES
+C             -6  ERROR CODE RETURNED BY THE JAC SUBROUTINE OR BY THE FCN SUBROUTINE
+C                 AT THE STARTING POINT
+C
+C IWORK(12) NUMBER OF FUNCTION EVALUATIONS
+C
+C IWORK(13) NUMBER OF JACOBIAN EVALUATIONS
+C
+C IWORK(14) NUMBER OF LU DECOMPOSITION
+C
+C IWORK(15) NUMBER OF LINEAR SYSTEMS SOLVED
+C
+C IWORK(16)-IWORK(20) NUMBER OF BLENDED ITERATIONS PER METHOD
+C
+C IWORK(21)-IWORK(25) NUMBER OF STEP PER METHOD
+C
+C IWORK(26)-IWORK(30) NUMBER OF ACCEPTED STEP PER METHOD
+C
+C IWORK(31)-IWORK(35) NUMBER OF REFUSED STEP PER METHOD (ERROR TEST)
+C
+C IWORK(36)-IWORK(40) NUMBER OF REFUSED STEP PER METHOD (NEWTON'S CONVERGENCE)
+C
+C -----------------------------------------------------------------------------------
+C -----------------------------------------------------------------------------------
+Cc-----------------------------------------------------------------------
+Cc     Sample driver for the code BIMD
+Cc-----------------------------------------------------------------------
+C      program chemakzod
+C      implicit none
+C      integer MMAX,lwork,liwork
+C      parameter(MMAX=6,lwork=24+MMAX*(70+2*MMAX),liwork=MMAX+40)
+C      double precision y(MMAX),work(lwork)
+C      integer iwork(lwork),ijac,imas,iout
+C      external feval, jeval,  solout, meval
+C      character problm*8
+C      double precision t0,tf,h0,h,rtol,atol,rpar(1)
+C      integer neqn,mljac,mujac,mlmas,mumas,itol,i,ierr, ipar(1)
+C      integer NSTEPS,NACCEPT,NFAILERR,NFAILNEWT,NITER,idid
+C
+C      double precision ks
+C      parameter (ks   =115.83d0)
+C
+C      neqn  = 6
+C      t0    = 0d0
+C      tf    = 180d0
+C      ijac  = 1
+C      mljac = neqn
+C      mujac = neqn
+C      mlmas = 0
+C      mumas = 0
+C
+C
+C      y(1) = 0.444d0
+C      y(2) = 0.00123d0
+C      y(3) = 0d0
+C      y(4) = 0.007d0
+C      y(5) = 0d0
+C      y(6) = ks*y(1)*y(4)
+C
+Cc-----------------------------------------------------------------------
+Cc     read the tolerances and initial stepsize
+Cc-----------------------------------------------------------------------
+C      write(6,*) 'give the absolute tolerance'
+C      read(5,*)   atol
+C      write(6,*) 'give the relative tolerance'
+C      read(5,*)   rtol
+C      write(6,*) 'give the initial  stepsize '
+C      read(5,*)   h0
+C
+C      h = h0
+C      do i=1,8
+C         iwork(i) = 0
+C      end do
+C      iwork(9)  = neqn
+C      iwork(10) = 0
+C      iwork(11) = 0
+C      do i=1,14
+C         work(i) = 0d0
+C      end do
+C
+C      iout = 0
+C      idid = 0
+C      imas = 1
+C      itol = 0
+C
+Cc-----------------------------------------------------------------------
+Cc     call of the subroutine BIMD
+Cc-----------------------------------------------------------------------
+C      call BIMD(neqn,feval,t0,tf,y,h,rtol,atol,itol,
+C     &          jeval,ijac,mljac,mujac,
+C     &          meval,imas,mlmas,mumas,
+C     &          solout,iout,
+C     &          work,lwork,iwork,liwork,
+C     &          rpar,ipar,idid)
+C      if (idid.ne.0) then
+C         write(6,*) 'ERROR: returned idid =', idid
+C         goto 20
+C      endif
+Cc-----------------------------------------------------------------------
+Cc     print final solution
+Cc-----------------------------------------------------------------------
+C      write(6,10)
+C   10 format(//)
+C
+C      write(6,11) atol,rtol,h0
+C   11 format(/,' we solved the problem with',//,
+C     +       '       absolute tolerance = ',d10.4,',',/,
+C     +       '       relative tolerance = ',d10.4,',',/,
+C     +       '     and initial stepsize = ',d10.4,//)
+Cc-----------------------------------------------------------------------
+Cc     print error with respect to reference solution
+Cc-----------------------------------------------------------------------
+C      NSTEPS    = 0
+C      NACCEPT   = 0
+C      NFAILERR  = 0
+C      NFAILNEWT = 0
+C      DO I=1,5
+C       NSTEPS    = NSTEPS    + iwork(I+19)
+C       NACCEPT   = NACCEPT   + iwork(I+25)
+C       NFAILERR  = NFAILERR  + iwork(I+30)
+C       NFAILNEWT = NFAILNEWT + iwork(I+35)
+C      END DO
+C
+C     write(6,41) NSTEPS,NACCEPT,NFAILNEWT,NFAILERR,
+C    &            IWORK(12),IWORK(13),IWORK(14)
+C
+C  41 format(
+C    +         ' # Steps              = ',i8,/
+C    +         ' # Accept             = ',i8,/,
+C    +         ' # Failnwt            = ',i8,/,
+C    +         ' # Failerr            = ',i8,/,
+C    +         ' # F-eval             = ',i8,/,
+C    +         ' # Jac-eval           = ',i8,/,
+C    +         ' # LU-decomp          = ',i8,/,/)
+C
+C     write(6,42) (y(i),i=1,6)
+C  42 format(
+C    &        'Numerical solution:',//
+C    &        'y(1) = ',e22.15,/,
+C    &        'y(2) = ',e22.15,/,
+C    &        'y(3) = ',e22.15,/,
+C    &        'y(4) = ',e22.15,/,
+C    &        'y(5) = ',e22.15,/,
+C    &        'y(6) = ',e22.15,/,/)
+C
+C20    continue
+C     end
+C
+Cc-----------------------------------------------------------------------
+Cc     AUXILIARY ROUTINES
+C
+C      subroutine feval(neqn,t,y,f,ierr,rpar,ipar)
+C      integer neqn,ierr,ipar(*)
+C      double precision t,y(neqn),f(neqn),rpar(*)
+C
+C      double precision k1,k2,k3,k4,kbig,kla,po2,hen,ks
+C      parameter (
+C     +   k1   = 18.7d0,
+C     +   k2   = 0.58d0,
+C     +   k3   = 0.09d0,
+C     +   k4   = 0.42d0,
+C     +   kbig = 34.4d0,
+C     +   kla  = 3.3d0,
+C     +   ks   = 115.83d0,
+C     +   po2  = 0.9d0,
+C     +   hen  = 737d0
+C     +)
+C      double precision r1,r2,r3,r4,r5,fin
+C
+C      if (y(2) .lt. 0d0) then
+C         ierr = -1
+C         return
+C      endif
+C
+C      r1  = k1*(y(1)**4)*sqrt(y(2))
+C      r2  = k2*y(3)*y(4)
+C      r3  = k2/kbig*y(1)*y(5)
+C      r4  = k3*y(1)*(y(4)**2)
+C      r5  = k4*(y(6)**2)*sqrt(y(2))
+C      fin = kla*(po2/hen-y(2))
+C
+C      f(1) =   -2d0*r1 +r2 -r3     -r4
+C      f(2) = -0.5d0*r1             -r4     -0.5d0*r5 + fin
+C      f(3) =        r1 -r2 +r3
+C      f(4) =           -r2 +r3 -2d0*r4
+C      f(5) =            r2 -r3         +r5
+C      f(6) = ks*y(1)*y(4)-y(6)
+C
+C      return
+C      end
+Cc-----------------------------------------------------------------------
+C      subroutine jeval(neqn,t,y,jac,ldjac,ierr,rpar,ipar)
+C      integer ldjac,neqn,ierr,ipar(*)
+C      double precision t,y(neqn),jac(ldjac,neqn),rpar(*)
+C
+C      integer i,j
+C
+C      double precision k1,k2,k3,k4,kbig,kla,ks
+C      parameter (
+C     +   k1   =18.7d0,
+C     +   k2   =0.58d0,
+C     +   k3   =0.09d0,
+C     +   k4   =0.42d0,
+C     +   kbig =34.4d0,
+C     +   kla  =3.3d0,
+C     +   ks   =115.83d0
+C     +)
+C      double precision r11,r12,r23,r24,r31,r35,r41,r44,r52,r56,fin2
+C
+C      if (y(2) .lt. 0d0) then
+C         ierr = -1
+C         return
+C      endif
+C
+C      do 20 j=1,neqn
+C         do 10 i=1,neqn
+C            jac(i,j) = 0d0
+C   10    continue
+C   20 continue
+C
+C      r11  = 4d0*k1*(y(1)**3)*sqrt(y(2))
+C      r12  = 0.5d0*k1*(y(1)**4)/sqrt(y(2))
+C      r23  = k2*y(4)
+C      r24  = k2*y(3)
+C      r31  = (k2/kbig)*y(5)
+C      r35  = (k2/kbig)*y(1)
+C      r41  = k3*y(4)**2
+C      r44  = 2d0*k3*y(1)*y(4)
+C      r52  = 0.5d0*k4*(y(6)**2)/sqrt(y(2))
+C      r56  = 2d0*k4*y(6)*sqrt(y(2))
+C      fin2 = -kla
+C
+C      jac(1,1) = -2d0*r11-r31-r41
+C      jac(1,2) = -2d0*r12
+C      jac(1,3) = r23
+C      jac(1,4) = r24-r44
+C      jac(1,5) = -r35
+C      jac(2,1) = -0.5d0*r11-r41
+C      jac(2,2) = -0.5d0*r12-0.5d0*r52+fin2
+C      jac(2,4) = -r44
+C      jac(2,6) = -0.5d0*r56
+C      jac(3,1) = r11+r31
+C      jac(3,2) = r12
+C      jac(3,3) = -r23
+C      jac(3,4) = -r24
+C      jac(3,5) = r35
+C      jac(4,1) = r31-2d0*r41
+C      jac(4,3) = -r23
+C      jac(4,4) = -r24-2d0*r44
+C      jac(4,5) = r35
+C      jac(5,1) = -r31
+C      jac(5,2) = r52
+C      jac(5,3) = r23
+C      jac(5,4) = r24
+C      jac(5,5) = -r35
+C      jac(5,6) = r56
+C      jac(6,1) = ks*y(4)
+C      jac(6,4) = ks*y(1)
+C      jac(6,6) = -1d0
+C
+C      return
+C      end
+Cc-----------------------------------------------------------------------
+C      subroutine meval(neqn,mas,ldmas,ierr,rpar,ipar)
+C      integer ldmas,neqn,ierr,ipar(*)
+C      double precision t,y(neqn),yprime(neqn),mas(ldmas,neqn),rpar(*)
+C
+C      integer i
+C
+C      do 10 i=1,neqn-1
+C         mas(1,i)=1d0
+C   10 continue
+C
+C      mas(1,neqn)=0d0
+C
+C      return
+C      end
+C
+Cc-----------------------------------------------------------------------
+C      subroutine solout(m,k,ord,t0,t,y,f,dd,rpar,ipar,irtrn)
+C      implicit none
+C      integer m,k,ord,irtrn,ipar(*)
+C      double precision t0,t(k),y(m,k),f(m,k),dd(k+1,m),rpar(*)
+C
+Cc     dummy subroutine
+C
+C      return
+C      end
+C
+C -----------------------------------------------------------------------------------
+C -----------------------------------------------------------------------------------
+

@@ -85,7 +85,8 @@ SUBROUTINE   GAMD(R,FCN,T0,Y0,TEND,H,            &
     !!
     !! REVISION HISTORY (YYYY/MM/DD):                   
     !!                      
-    !!                   1997/20/08    !!                      - FIRST VERSION OF GAM
+    !!                   1997/20/08
+    !!                      - FIRST VERSION OF GAM
     !!   
     !!                   1999/11/25
     !!                      - CORRECTED OUTPUT LAST STEPSIZE

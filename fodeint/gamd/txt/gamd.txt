@@ -1,0 +1,590 @@
+!! THE CODE GAMD NUMERICALLY SOLVES A (POSSIBLY STIFF)
+!! SYSTEM OF FIRST 0RDER ORDINARY DIFFERENTIAL EQUATIONS 
+!! OR A LINEARLY IMPLICIT DAE
+!!
+!! Copyright (C)1997-2007   
+!! Authors: FRANCESCA MAZZIA (mazzia@dm.uniba.it)
+!!          FELICE IAVERNARO (felix@dm.uniba.it) 
+!!
+!!
+!!This program is free software; you can redistribute it and/or
+!!modify it under the terms of the GNU General Public License
+!!as published by the Free Software Foundation; either version 2
+!!of the License, or (at your option) any later version.
+!!
+!!This program is distributed in the hope that it will be useful,
+!!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!!MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!!GNU General Public License for more details.
+!!
+!!Licensed under The GNU General Public License, Version 2 or later.
+!!    http://www.gnu.org/licenses/info/GPLv2orLater.html
+!!
+!!You should have received a copy of the GNU General Public License
+!!along with this program; if not, write to the Free Software
+!!Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301,
+!!USA.
+!!
+!!
+
+SUBROUTINE   GAMD(R,FCN,T0,Y0,TEND,H,            &
+       &                  RTOL,ATOL,ITOL,        &
+       &                  JAC ,IJAC,MLJAC,MUJAC, &
+       &                  MAS ,IMAS,MLMAS,MUMAS, &
+       &                  SOLOUT,IOUT,           &
+       &                  WORK,LWORK,IWORK,LIWORK,RPAR,IPAR,IDID)
+    
+    !!
+    !!     PURPOSE: THE CODE GAMD NUMERICALLY SOLVES A (POSSIBLY STIFF)
+    !!              SYSTEM OF FIRST 0RDER ORDINARY DIFFERENTIAL EQUATIONS
+    !!              IN THE FORM  Y'=F(T,Y), OR A LINEARLY IMPLICIT DAE 
+    !!              MY'=F(T,Y) WITH CONSTANT MASS (FULL OR BANDED) MATRIX M, 
+    !!              WITH A GIVEN INITIAL CONDITION. IT IS INTENDED AS AN 
+    !!              EXTENSION OF THE CODE GAM TO DAEs (SEE THE REVISION 
+    !!              HISTORY FOR DETAILS)
+    !!              
+    !!     AUTHORS: F. IAVERNARO AND F. MAZZIA
+    !!              UNIVERSITA' DEGLI STUDI DI BARI,
+    !!              DIPARTIMENTO DI MATEMATICA
+    !!              VIA ORABONA 4, 70125 BARI, ITALY
+    !!              E-MAIL:  MAZZIA@DM.UNIBA.IT
+    !!                       FELIX@DM.UNIBA.IT
+    !!
+    !!     METHODS: THE METHODS USED ARE IN THE CLASS OF BOUNDARY VALUE
+    !!              METHODS (BVMs), NAMELY THE GENERALIZED ADAMS METHODS
+    !!              (GAMs) OF ORDER 3-5-7-9 WITH STEP SIZE CONTROL.
+    !!
+    !!  REFERENCES: L.BRUGNANO, D.TRIGIANTE,  Solving Differential Problems
+    !!              by Multistep Initial and Boundary Value Methods,
+    !!              Gordon & Breach,1998.
+    !!
+    !!              F.IAVERNARO, F.MAZZIA,  Block-Boundary Value Methods
+    !!              for the solution of Ordinary Differential Equations,
+    !!              Siam J. Sci. Comput. 21 (1) (1999) 323--339.
+    !!
+    !!              F.IAVERNARO, F.MAZZIA,  Solving Ordinary Differential
+    !!              Equations by Generalized Adams Methods: properties and
+    !!              implementation techniques,
+    !!              Appl. Num. Math. 28 (2-4) (1998) 107-126.
+    !!
+    !! DESCRIPTION: THE CODE GAMD CONSISTS OF TWO FILES:
+    !!              - gamd.f90   CONTAINS THE MAIN SUBROUTINES THAT IMPLEMENT THE
+    !!                           INTEGRATION PROCEDURE;
+    !!
+    !!              - gamda.f90  CONTAINS THE ADDITIONAL LINEAR ALGEBRA ROUTINES
+    !!                           REQUIRED BY gamd.f90 PLUS SOME OTHER SUBROUTINES 
+    !!                           PROPER OF THE USED METHODS;
+    !!
+    !!    COMMENTS: THE PHILOSOFY AND THE STYLE USED IN WRITING THE CODE ARE VERY
+    !!              SIMILAR TO THOSE CHARACTERIZING THE CODE  RADAU5.
+    !!              INDEED THE AUTHORS IMPORTED FROM RADAU5 SOME SUBROUTINES,
+    !!              COMMENTS AND IMPLEMENTATION TECHNIQUES LEAVING UNCHANGED
+    !!              THE NAME AND THE MEANING OF  A NUMBER OF VARIABLES.
+    !!              THE AUTHORS ARE VERY GRATEFUL TO ANYONE USES THE CODE AND
+    !!              WOULD APPRECIATE ANY CRITICISM AND REMARKS ON HOW IT PERFORMS.
+    !!
+    !! REVISION HISTORY (YYYY/MM/DD):                   
+    !!                      
+    !!                   1997/20/08
+    !!                      - FIRST VERSION OF GAM
+    !!   
+    !!                   1999/11/25
+    !!                      - CORRECTED OUTPUT LAST STEPSIZE
+    !!                      - CORRECTED INPUT  H  
+    !!     
+    !!                   2003/23/08  
+    !!                      - FIRST VERSION OF GAMD
+    !!                      - REWRITTEN IN FORTRAN 90
+    !!                      - EXTENDED TO LINEARLY IMPLICIT DAES  MY'=F(T,Y)
+    !!                        WITH CONSTANT MASS MATRIX M
+    !!                      - ADDED IERR IN FCN
+    !!                     
+    !!                   2006/24/01
+    !!                      - CORRECTED THE VALUE CALJAC TO AVOID
+    !!                        THE COMPUTATION OF JACOBIAN MORE THEN ONE
+    !!                        TIME PER STEPS
+    !!                      - CHANGED THE DEFINITION OF TP AND T1 IN ALL
+    !!                        THE SUBROUTINE TP(DBLK+1) --> TP(*) 
+    !!
+    !!                   2006/15/02
+    !!                      - CORRECTED ALL THE RUN TIM ERROR FOR
+    !!                        SALFORD FTN95 FORTRAN
+    !!
+    !!                   2007/15/03
+    !!                       - CORRECTED INSTRUCTION FOR WORK INDEX 5:7
+    !!                   2007/24/05
+    !!                       - ADDED THE GNU General Public License
+    !! -------------------------------------------------------------------------
+    !!     INPUT PARAMETERS
+    !! -------------------------------------------------------------------------
+    !!     R           DIMENSION OF THE SYSTEM
+    !!
+    !!     FCN         NAME (EXTERNAL) OF THE SUBROUTINE COMPUTING THE
+    !!                 VALUE OF F(T,Y):
+    !!                    SUBROUTINE FCN(R,T,Y,F,IERR,RPAR,IPAR)
+    !!                    DOUBLE PRECISION X,Y(R),F(R)
+    !!                    INTEGER IERR
+    !!                    F(1)=...   ETC.
+    !!                  IERR = -1 to prevent OVERFLOW
+    !!                 (RPAR, IPAR    SEE BELOW)
+    !!
+    !!     T0          INITIAL T-VALUE
+    !!
+    !!     Y0          INITIAL VALUES FOR Y
+    !!
+    !!     TEND        FINAL T-VALUE (TEND-T MUST BE POSITIVE)
+    !!
+    !!     H           INITIAL STEP SIZE GUESS;
+    !!                 FOR STIFF EQUATIONS WITH INITIAL TRANSIENT,
+    !!                 H=1.D0/(NORM OF F'), USUALLY 1.D-3 OR 1.D-5, IS GOOD.
+    !!                 THIS CHOICE IS NOT VERY IMPORTANT, THE STEP SIZE IS
+    !!                 QUICKLY ADAPTED. (IF H=0.D0, THE CODE PUTS H=1.D-6).
+    !!
+    !!     RTOL,ATOL   RELATIVE AND ABSOLUTE ERROR TOLERANCES. THEY
+    !!                 CAN BE BOTH SCALARS OR ELSE BOTH VECTORS OF LENGTH R.
+    !!
+    !!     ITOL        SWITCH FOR RTOL AND ATOL:
+    !!                   ITOL=0: BOTH RTOL AND ATOL ARE SCALARS.
+    !!                     THE CODE KEEPS, ROUGHLY, THE LOCAL ERROR OF
+    !!                     Y(I) BELOW RTOL*ABS(Y(I))+ATOL
+    !!                   ITOL=1: BOTH RTOL AND ATOL ARE VECTORS.
+    !!                     THE CODE KEEPS THE LOCAL ERROR OF Y(I) BELOW
+    !!                     RTOL(I)*ABS(Y(I))+ATOL(I).
+    !!
+    !!     JAC         NAME (EXTERNAL) OF THE SUBROUTINE WHICH COMPUTES
+    !!                 THE PARTIAL DERIVATIVES OF F(T,Y) WITH RESPECT TO Y
+    !!                 (THIS ROUTINE IS ONLY CALLED IF IJAC=1; SUPPLY
+    !!                 A DUMMY SUBROUTINE IN THE CASE IJAC=0).
+    !!                 FOR IJAC=1, THIS SUBROUTINE MUST HAVE THE FORM
+    !!                    SUBROUTINE JAC(R,T,Y,DFY,LDFY,RPAR,IPAR)
+    !!                    DOUBLE PRECISION T,Y(R),DFY(LDFY,R)
+    !!                    DFY(1,1)= ...
+    !!                 LDFY, THE COLUMN-LENGTH OF THE ARRAY, IS
+    !!                 FURNISHED BY THE CALLING PROGRAM.
+    !!                 IF (MLJAC.EQ.R) THE JACOBIAN IS SUPPOSED TO
+    !!                    BE FULL AND THE PARTIAL DERIVATIVES ARE
+    !!                    STORED IN DFY AS
+    !!                       DFY(I,J) = PARTIAL F(I) / PARTIAL Y(J)
+    !!                 ELSE, THE JACOBIAN IS TAKEN AS BANDED AND
+    !!                    THE PARTIAL DERIVATIVES ARE STORED
+    !!                    DIAGONAL-WISE AS
+    !!                       DFY(I-J+MUJAC+1,J) = PARTIAL F(I) / PARTIAL Y(J).
+    !!
+    !!     IJAC        SWITCH FOR THE COMPUTATION OF THE JACOBIAN:
+    !!                    IJAC=0: JACOBIAN IS COMPUTED INTERNALLY BY FINITE
+    !!                       DIFFERENCES, SUBROUTINE "JAC" IS NEVER CALLED.
+    !!                    IJAC=1: JACOBIAN IS SUPPLIED BY SUBROUTINE JAC.
+    !!
+    !!     MLJAC       SWITCH FOR THE BANDED STRUCTURE OF THE JACOBIAN:
+    !!                    MLJAC=R: JACOBIAN IS A FULL MATRIX. THE LINEAR
+    !!                       ALGEBRA IS DONE BY FULL-MATRIX GAUSS-ELIMINATION.
+    !!                       0<=MLJAC<R: MLJAC IS THE LOWER BANDWITH OF JACOBIAN
+    !!                       MATRIX (>= NUMBER OF NON-ZERO DIAGONALS BELOW
+    !!                       THE MAIN DIAGONAL).
+    !!
+    !!     MUJAC       UPPER BANDWITH OF JACOBIAN  MATRIX (>= NUMBER OF NON-
+    !!                 ZERO DIAGONALS ABOVE THE MAIN DIAGONAL).
+    !!                 NEED NOT BE DEFINED IF MLJAC=R.
+    !!
+    !!     MAS         NAME (EXTERNAL) OF SUBROUTINE COMPUTING THE MASS-
+    !!                 MATRIX M.
+    !!                 IF IMAS=0, THIS MATRIX IS ASSUMED TO BE THE IDENTITY
+    !!                 MATRIX AND NEEDS NOT TO BE DEFINED;
+    !!                 SUPPLY A DUMMY SUBROUTINE IN THIS CASE.
+    !!                 IF IMAS=1, THE SUBROUTINE MAS IS OF THE FORM
+    !!                    SUBROUTINE MAS(N,AM,LMAS,RPAR,IPAR)
+    !!                    DOUBLE PRECISION AM(LMAS,N)
+    !!                    AM(1,1)= ....
+    !!                  IF (MLMAS.EQ.N) THE MASS-MATRIX IS STORED
+    !!                  AS FULL MATRIX LIKE
+    !!                         AM(I,J) = M(I,J)
+    !!                  ELSE, THE MATRIX IS TAKEN AS BANDED AND STORED
+    !!                  DIAGONAL-WISE AS
+    !!                         AM(I-J+MUMAS+1,J) = M(I,J).
+    !!
+    !!     IMAS       GIVES INFORMATION ON THE MASS-MATRIX:
+    !!                    IMAS=0: M IS SUPPOSED TO BE THE IDENTITY
+    !!                       MATRIX, MAS IS NEVER CALLED.
+    !!                    IMAS=1: MASS-MATRIX  IS SUPPLIED.
+    !!
+    !!    MLMAS       SWITCH FOR THE BANDED STRUCTURE OF THE MASS-MATRIX:
+    !!                       MLMAS=N: THE FULL MATRIX CASE. THE LINEAR ALGEBRA 
+    !!                                IS DONE BY FULL-MATRIX GAUSS-ELIMINATION.
+    !!                    0<=MLMAS<N: MLMAS IS THE LOWER BANDWITH OF THE MATRIX
+    !!                                (>= NUMBER OF NON-ZERO DIAGONALS BELOW
+    !!                                THE MAIN DIAGONAL).
+    !!                 MLMAS IS SUPPOSED TO BE .LE. MLJAC.
+    !!
+    !!     MUMAS       UPPER BANDWITH OF MASS-MATRIX (>= NUMBER OF NON-
+    !!                 ZERO DIAGONALS ABOVE THE MAIN DIAGONAL).
+    !!                 NEED NOT BE DEFINED IF MLMAS=N.
+    !!                 MUMAS IS SUPPOSED TO BE .LE. MUJAC.
+    !!
+    !!     SOLOUT      NAME (EXTERNAL) OF SUBROUTINE PROVIDING THE
+    !!                 NUMERICAL SOLUTION DURING INTEGRATION.
+    !!                 IF IOUT=1, IT IS CALLED AFTER EVERY SUCCESSFUL STEP.
+    !!                 SUPPLY A DUMMY SUBROUTINE IF IOUT=0.
+    !!                 IT MUST HAVE THE FORM
+    !!                    SUBROUTINE SOLOUT(R,TP,YP,FF,NT,DBLK,ORD,RPAR,IPAR,IRTRN)
+    !!                    INTEGER R, DBLK, ORD, IPAR(*), IRTRN, NT
+    !!                    DOUBLE PRECISION TP(*), YP(R,*), RPAR(*), FF(R,*)
+    !!                    ....
+    !!                 SOLOUT FURNISHES THE SOLUTION "YP" AT THE
+    !!                    GRID-POINTS "TP(*)".
+    !!                 "IRTRN" SERVES TO INTERRUPT THE INTEGRATION. IF IRTRN
+    !!                    IS SET <0, GAM  RETURNS TO THE CALLING PROGRAM.
+    !!
+    !!                 CONTINUOUS OUTPUT:
+    !!                 DURING CALLS TO "SOLOUT", A CONTINUOUS SOLUTION
+    !!                 FOR THE INTERVAL [TP(1),TP(DBLK+1)] IS AVAILABLE THROUGH
+    !!                 THE FUNCTION
+    !!                        >>>   CONTR(I,R,T,TP,FF,DBLK,NT)   <<<
+    !!                 WHICH PROVIDES AN APPROXIMATION TO THE I-TH
+    !!                 COMPONENT OF THE SOLUTION AT THE POINT T. THE VALUE
+    !!                 T SHOULD LIE IN THE INTERVAL [TP(1),TP(DBLK+1)] ON
+    !!                 WHICH THE SOLUTION IS COMPUTED AT CURRENT STEP.
+    !!                 DO NOT CHANGE THE ENTRIES OF FF(R,*) and NT, IF THE
+    !!                 DENSE OUTPUT FUNCTION IS USED.
+    !!
+    !!     IOUT        SWITCH FOR CALLING THE SUBROUTINE SOLOUT:
+    !!                    IOUT=0: SUBROUTINE IS NEVER CALLED
+    !!                    IOUT=1: SUBROUTINE IS AVAILABLE FOR OUTPUT.
+    !!
+    !!     WORK        ARRAY OF WORKING SPACE OF LENGTH "LWORK".
+    !!                 WORK(1), WORK(2),.., WORK(LWORK) SERVE AS PARAMETERS
+    !!                 FOR THE CODE. FOR STANDARD USE OF THE CODE
+    !!                 WORK(1),..,WORK(LWORK) MUST BE SET TO ZERO BEFORE
+    !!                 CALLING. SEE BELOW FOR A MORE SOPHISTICATED USE.
+    !!
+    !!     LWORK       DECLARED LENGTH OF ARRAY "WORK". IN THIS VERSION SET
+	!!                 LWORK=21
+    !!
+    !!     IWORK       INTEGER WORKING SPACE OF LENGTH "LIWORK".
+    !!                 IWORK(1),IWORK(2),...,IWORK(LIWORK) SERVE 
+    !!                 AS PARAMETERS FOR THE CODE. FOR STANDARD USE, 
+    !!                 SET IWORK(1),..,IWORK(9) TO ZERO BEFORE CALLING.
+    !!                 - IWORK(10),...,IWORK(24) SERVE AS WORKING AREA.
+    !!                 - IWORK(25),IWORK(26),IWORK(27) CONTAIN THE DIMENSION OF
+	!!                   THE INDEX 1, INDEX2, INDEX3, VARIABLES RESPECTIVELY.
+	!!                   THEY MUST BE PASSED IN GAMD AS INPUT VARIABLES WHEN 
+	!!                   SOLVING A DAE; THEY MAY BE SET EQUAL TO ZERO WHEN 
+	!!                   SOLVING AN ODE.  
+    !!
+    !!
+    !!     LIWORK      DECLARED LENGTH OF ARRAY "IWORK". IN THIS VERSION SET
+    !!                 LIWORK=27
+    !!
+    !!     RPAR, IPAR  REAL AND INTEGER PARAMETERS (OR PARAMETER ARRAYS) WHICH
+    !!                 CAN BE USED FOR COMMUNICATION BETWEEN YOUR CALLING
+    !!                 PROGRAM AND THE FCN, JAC SUBROUTINES.
+    !!
+    !!     SEE THE EXAMPLE BELOW FOR A PRACTICAL EXPLANATION ON THE USE OF
+    !!     SOME OF THE LISTED VARIABLES AND SUBROUTINES.
+    !!
+    !! -------------------------------------------------------------------------
+    !!     EXAMPLE PROBLEM.
+    !!---------------------------------------------------------------------------
+    !!
+    !! the following is a simple example problem, with the coding
+    !! needed for its solution by GAMD.  The problem is from chemical
+    !! kinetics, and consists of the following three rate equations..
+    !!     dy1/dt = -.04*y1 + 1.e4*y2*y3
+    !!     dy2/dt = .04*y1 - 1.e4*y2*y3 - 3.e7*y2**2
+    !!     dy3/dt = 3.e7*y2**2
+    !! on the interval from t = 0.0 to t = 4.e10, with initial conditions
+    !! y1 = 1.0, y2 = y3 = 0.  The problem is stiff.
+    !!
+    !! the following coding, written in fortran 77, solves this problem with GAMD,
+    !! printing results at t = .4, 4., ..., 4.e10.  it uses
+    !! itol = 1 and atol much smaller for y2 than for y1 or y3 because
+    !! y2 has much smaller values.
+    !! At the end of the run, statistical quantities of interest are
+    !! printed (see optional outputs in the full description below). 
+    !! In case you want to run it, please copy and paste it into a new file, 
+	!! remove the first column and save it using the fortran 77 extension .f, 
+	!! for example "sample.f". When the source code of the problem is written 
+	!! in fortran 77, we suggest to create the object file of the problem separately
+	!! and then link it with the code files.   
+!        implicit none
+!        integer     neq 
+!        parameter ( neq=3 )
+!        integer     lwork, liwork
+!        parameter ( lwork=21, liwork=27)
+!
+!
+!        integer  i, iwork(liwork), itol, iout, nsteps, naccept
+!        integer  mljac, mujac, ijac, mlmas, mumas, imas, ipar, idid
+!
+!        double precision atol(neq), rtol(neq),work(lwork),t,tout,y(neq)
+!        double precision h, rpar
+!        external feval, jeval, meval, solout
+!       
+!
+!    
+!        y(1) = 1.0d0
+!        y(2) = 0.0d0
+!        y(3) = 0.0d0
+!        t = 0.0d0
+!        tout = 4.0d10
+!        iout = 1
+!        ijac = 0
+!	  imas = 0 
+!        mljac = neq
+!        mujac = neq
+!        h = 1d-6
+!    
+!        do i = 1,21
+!           work(i) = 0.0d0
+!        enddo
+!        do i = 1,27
+!           iwork(i) = 0.0d0
+!        enddo
+!    
+!        itol = 1
+!        rtol(1) = 1.0d-5
+!        rtol(2) = 1.0d-5
+!        rtol(3) = 1.0d-5
+!        atol(1) = 1.0d-5
+!        atol(2) = 1.0d-8
+!        atol(3) = 1.0d-5
+!    
+!        rpar = 0.4d0
+!
+!        call GAMD(neq, feval, t, y, tout, h, rtol, atol, itol,
+!     +            jeval, ijac, mljac, mujac,
+!     +            meval, imas, mlmas, mumas,
+!     +            solout,iout,
+!     +            work,lwork,iwork,liwork,rpar,ipar,idid)
+!
+!
+!
+!   
+!50      format(7h at t =,e12.4,6h   y =,3e14.6)
+!        write(6,*)
+!        write(6,50) t, y(1), y(2), y(3)
+!    
+!        nsteps = 0
+!        do i=12,23
+!           nsteps = nsteps + iwork(i)
+!        end do
+!        naccept = iwork(12)+iwork(13)+iwork(14)+iwork(15)
+!        write(6,41) nsteps,naccept,iwork(10),iwork(11),iwork(24)
+!41      format(  ' # steps  =         ',i8,/,
+!     +       ' # accept =         ',i8,/,
+!     +       ' # f-eval =         ',i8,/,
+!     +       ' # Jac-eval =       ',i8,/,
+!     +       ' # LU-decomp =      ',i8/)
+!    
+!        stop
+!        end
+!    
+!        subroutine feval(neq, t, y, ydot, rpar, ipar)
+!        double precision t, y(3), ydot(3), rpar
+!        integer ipar
+!        ydot(1) = -.04d0*y(1) + 1.0d4*y(2)*y(3)
+!        ydot(3) = 3.0d7*y(2)*y(2)
+!        ydot(2) = -ydot(1) - ydot(3)
+!        return
+!        end
+!
+!c-----------------------------------------------------------------------
+!
+!        subroutine jeval(neqn,t,y,jac,ldim,rpar,ipar)
+!        double precision t,y(neqn),jac(ldim,neqn),rpar
+!        integer neqn,ldim,ipar
+!c
+!c       dummy subroutine
+!c
+!
+!        return
+!        end
+!
+!c-----------------------------------------------------------------------
+!
+!        subroutine meval(ldim,neqn,t,y,yprime,dfddy,ierr,rpar,ipar)
+!        integer ldim,neqn,ierr,ipar(*)
+!        double precision t,y(neqn),yprime(neqn),dfddy(ldim,neqn),rpar(*)
+!c
+!c       dummy subroutine
+!c
+!
+!        return
+!        end
+!
+!c-----------------------------------------------------------------------
+!
+!        subroutine solout(r,tp,yp,ff,nt1,dblk,ord,rpar,ipar,irtrn)
+!        use subgamd
+!	  implicit none
+!	  
+!        integer r,dblk,ord,ipar(*),irtrn,nt1
+!        double precision tp(*),yp(r,*),rpar(*),ff(r,*),y(3),t
+!           t = rpar(1)
+!           if ( (tp(1).le.t).and.(t.lt.tp(dblk+1)) ) then
+!              y(1) = contr(1,r,t,tp,ff,dblk,nt1)
+!              y(2) = contr(2,r,t,tp,ff,dblk,nt1)
+!              y(3) = contr(3,r,t,tp,ff,dblk,nt1)
+!              write(6,50) t, y(1), y(2), y(3)
+!              rpar(1) = rpar(1)*10d0
+!           endif
+!50      format(7h at t =,e12.4,6h   y =,3e14.6)
+!        return
+!        end
+    !!
+    !! -------------------------------------------------------------------------
+    !!     SOPHISTICATED SETTING OF PARAMETERS
+    !! -------------------------------------------------------------------------
+    !!              SEVERAL PARAMETERS OF THE CODE ARE TUNED TO MAKE IT WORK
+    !!              WELL. THEY MAY BE DEFINED BY SETTING WORK(1),...
+    !!              AS WELL AS IWORK(1),... DIFFERENT FROM ZERO.
+    !!              FOR ZERO INPUT, THE CODE CHOOSES DEFAULT VALUES:
+    !!
+    !!    IWORK(1)  NOT USED
+    !!
+    !!    IWORK(2)  THIS IS THE MAXIMAL NUMBER OF ALLOWED STEPS.
+    !!              THE DEFAULT VALUE (FOR IWORK(2)=0) IS 100000.
+    !!
+    !!    IWORK(3)  ORDMIN, 3 <= ORDMIN <= 9,
+    !!
+    !!    IWORK(4)  ORDMAX, ORDMIN <= ORDMAX <= 9
+    !!
+    !!    IWORK(5)  THE MAXIMUM NUMBER OF SPLITTING-NEWTON ITERATIONS FOR THE
+    !!              SOLUTION OF THE IMPLICIT SYSTEM IN EACH STEP FOR ORDER 3.
+    !!              THE DEFAULT VALUE (FOR IWORK(5)=0) IS 10.
+    !!
+    !!    IWORK(6)  THE MAXIMUM NUMBER OF SPLITTING-NEWTON ITERATION FOR
+    !!              ORDER 5, THE DEFAULT VALUE (FOR IWORK(6)=0) IS 18.
+    !!
+    !!    IWORK(7)  THE MAXIMUM NUMBER OF SPLITTING-NEWTON ITERATION FOR
+    !!              ORDER 7, THE DEFAULT VALUE (FOR IWORK(7)=0) IS 26.
+    !!
+    !!    IWORK(8)  THE MAXIMUM NUMBER OF SPLITTING-NEWTON ITERATION FOR
+    !!              ORDER 9, THE DEFAULT VALUE (FOR IWORK(5)=0) IS 36.
+	!!   
+	!!    IWORK(9)  NOT YET USED 
+    !!
+    !!    IWORK(10:24) USED AS OUTPUT PARAMETERS (SEE BELOW)   
+    !!
+    !!       THE FOLLOWING 3 PARAMETERS ARE IMPORTANT FOR
+    !!       DIFFERENTIAL-ALGEBRAIC SYSTEMS OF INDEX > 1.
+    !!       THE FUNCTION-SUBROUTINE SHOULD BE WRITTEN SUCH THAT
+    !!       THE INDEX 1,2,3 VARIABLES APPEAR IN THIS ORDER. 
+    !!       IN ESTIMATING THE ERROR THE INDEX 2 VARIABLES ARE
+    !!       MULTIPLIED BY H, THE INDEX 3 VARIABLES BY H**2.
+    !!
+    !!    IWORK(25)  DIMENSION OF THE INDEX 1 VARIABLES (MUST BE > 0). FOR 
+    !!               ODE'S THIS EQUALS THE DIMENSION OF THE SYSTEM.
+    !!               DEFAULT IWORK(25)=N.
+    !!
+    !!    IWORK(26)  DIMENSION OF THE INDEX 2 VARIABLES. DEFAULT IWORK(26)=0.
+    !!
+    !!    IWORK(27)  DIMENSION OF THE INDEX 3 VARIABLES. DEFAULT IWORK(27)=0.
+    !!
+    !!
+    !!    WORK(1)   UROUND, THE ROUNDING UNIT, DEFAULT 1.D-16.
+    !!
+    !!    WORK(2)   HMAX  MAXIMAL STEP SIZE, DEFAULT TEND-T0.
+    !!
+    !!    WORK(3)   THET DECIDE WHETHER THE JACOBIAN SHOULD BE RECOMPUTED
+    !!
+    !!    WORK(4)   FACNEWT:  stopping criterion for splitting-Newton method
+    !!                 for small values of min(abs(y_i)) and min(abs(f_j)).
+    !!
+    !!    WORK(5)   TETAK0(1) stopping criterium for the order 3 
+	!!              splitting-Newton method:
+    !!              the iterates must be decreasing by a factor tetak0(1)
+    !!
+    !!    WORK(6)   TETAK0(2) stopping criterium for the order 5 
+	!!              splitting-Newton method:
+    !!              the iterates must be decreasing by a factor tetak0(2)
+    !!
+    !!    WORK(7)   TETAK0(3) stopping criterium for the order 7 
+	!!              splitting-Newton method:
+    !!              the iterates must be decreasing by a factor tetak0(3)
+    !!
+    !!    WORK(8)   TETAK0(4) stopping criterium for the order 9
+	!!              splitting-Newton method:
+    !!              the iterates must be decreasing by a factor tetak0(4)
+    !!
+    !!    WORK(9)   CS(2): EMPIRICAL COMPUTATIONAL COST FOR ORDER  5 METHOD
+    !!              USED IN THE ORDER VARIATION STRATEGY
+    !!              (DEFAULT WORK(6) = 2.4D0)
+    !!
+    !!    WORK(10)  CS(3): EMPIRICAL COMPUTATIONAL COST FOR ORDER  7 METHOD
+    !!              USED IN THE ORDER VARIATION STRATEGY
+    !!              (DEFAULT WORK(6) = 4.0D0)
+    !!
+    !!    WORK(11)  CS(4): EMPIRICAL COMPUTATIONAL COST FOR ORDER  9 METHOD
+    !!              USED IN THE ORDER VARIATION STRATEGY
+    !!              (DEFAULT WORK(6) = 7.2D0)
+    !!
+    !!    WORK(12)-WORK(13)   FACL-FACR: PARAMETERS FOR STEP SIZE SELECTION
+    !!               THE NEW STEPSIZE IS CHOSEN SUBJECT TO THE RESTRICTION
+    !!               FACL  <=  HNEW/HOLD <= FACR
+    !!               (DEFAULT WORK(9) = 0.12, WORK(10) = 10 )
+    !!
+    !!    WORK(14)  SFDOWN:SAFETY FACTOR IN STEP SIZE PREDICTION
+    !!                  USED FOR THE LOWER ORDER METHOD
+    !!                  (DEFAULT WORK(11) = 20D0)
+    !!
+    !!    WORK(15)  SFUP:SAFETY FACTOR IN STEP SIZE PREDICTION
+    !!                  USED FOR THE UPPER ORDER METHOD
+    !!                  (DEFAULT WORK(12) = 40D0)
+    !!
+    !!    WORK(16)  SFSAME: SAFETY FACTOR IN STEP SIZE PREDICTION
+    !!                  USED FOR THE CURRENT ORDER METHOD
+    !!                  (DEFAULT WORK(13) = 18D0)
+    !!
+    !!    WORK(17)  SF: SAFETY FACTOR IN STEP SIZE PREDICTION
+    !!                  USED FOR THE CURRENT ORDER METHOD WHEN IS
+    !!                  FAILED THE ERROR CONTROL TEST (DEFAULT WORK(14) = 15D0)
+    !!
+    !!
+    !!
+    !!    WORK(18)  FACNEWT stopping criterion for splitting-Newton method ORDER 3
+    !!                  (DEFAULT WORK(15) = 1.0D-3)
+    !!
+    !!    WORK(19)  FACNEWT stopping criterion for splitting-Newton method ORDER 5
+    !!                  (DEFAULT WORK(16) = 9.0D-2)
+    !!
+    !!    WORK(20)  FACNEWT stopping criterion for splitting-Newton method ORDER 7
+    !!                  (DEFAULT WORK(17) = 9.0D-1)
+    !!
+    !!    WORK(21)  FACNEWT stopping criterion for splitting-Newton method ORDER 9
+    !!                  (DEFAULT WORK(18) = 9.9D-1)
+    !!
+    !! -------------------------------------------------------------------------
+    !!     OUTPUT PARAMETERS
+    !! -------------------------------------------------------------------------
+    !!     T0          T-VALUE FOR WHICH THE SOLUTION HAS BEEN COMPUTED
+    !!                 (AFTER SUCCESSFUL RETURN T0=TEND).
+    !!
+    !!     Y(N)        NUMERICAL SOLUTION AT T0
+    !!
+    !!     H           PREDICTED STEP SIZE OF THE LAST ACCEPTED STEP
+    !!
+    !!     IDID        REPORTS ON SUCCESSFULNESS UPON RETURN:
+    !!                   IDID= 1  COMPUTATION SUCCESSFUL,
+    !!                   IDID=-1  INPUT IS NOT CONSISTENT,
+    !!                   IDID=-2  LARGER NMAX IS NEEDED,
+    !!                   IDID=-3  STEP SIZE BECOMES TOO SMALL,
+    !!                   IDID=-4  MATRIX IS REPEATEDLY SINGULAR.
+    !!                   IDID=-5  GAM CANNOT HANDLES IERR=-1.
+    !!
+    !!   IWORK(10)  NFCN    NUMBER OF FUNCTION EVALUATIONS (THOSE FOR NUMERICAL
+    !!                      EVALUATION OF THE JACOBIAN ARE NOT COUNTED)
+    !!   IWORK(11)  NJAC    NUMBER OF JACOBIAN EVALUATIONS (EITHER ANALYTICALLY
+    !!                      OR NUMERICALLY)
+    !!   IWORK(12)  NSTEP(1)  NUMBER OF COMPUTED STEPS   ORD 3
+    !!   IWORK(13)  NSTEP(2)  NUMBER OF COMPUTED STEPS   ORD 5
+    !!   IWORK(14)  NSTEP(3)  NUMBER OF COMPUTED STEPS   ORD 7
+    !!   IWORK(15)  NSTEP(4)  NUMBER OF COMPUTED STEPS   ORD 9
+    !!   IWORK(16)  NNEWT(1)  NUMBER OF REJECTED STEPS (DUE TO NEWTON CONVERGENCE) 3
+    !!   IWORK(17)  NNEWT(2)  NUMBER OF REJECTED STEPS (DUE TO NEWTON CONVERGENCE) 5
+    !!   IWORK(18)  NNEWT(3)  NUMBER OF REJECTED STEPS (DUE TO NEWTON CONVERGENCE) 7
+    !!   IWORK(19)  NNEWT(4)  NUMBER OF REJECTED STEPS (DUE TO NEWTON CONVERGENCE) 9
+    !!   IWORK(20)  NERR(1)   NUMBER OF REJECTED STEPS (DUE TO ERROR TEST) 3
+    !!   IWORK(21)  NERR(2)   NUMBER OF REJECTED STEPS (DUE TO ERROR TEST) 5
+    !!   IWORK(22)  NERR(3)   NUMBER OF REJECTED STEPS (DUE TO ERROR TEST) 7
+    !!   IWORK(23)  NERR(4)   NUMBER OF REJECTED STEPS (DUE TO ERROR TEST) 9
+    !!   IWORK(24)  NDEC      NUMBER OF LU-DECOMPOSITIONS
