@@ -37,6 +37,8 @@ Regardless of the interface you need to use [bridj](https://github.com/nativelib
 
 Both the C interface and the Java interface come with a set of tests. The tests include examples of the use of the basic and full interface.
 
+Additional examples can be found [here](https://github.com/fons/JavaOdeIntExamples/tree/master/src/main/java/JavaOdeIntExamples)
+
 # Building
 
 ## Prebuilt
