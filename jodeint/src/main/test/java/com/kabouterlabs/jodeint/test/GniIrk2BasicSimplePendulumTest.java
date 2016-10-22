@@ -21,15 +21,9 @@ package com.kabouterlabs.jodeint.test;
 
 
 import com.kabouterlabs.jodeint.cgnicodes.CgnicodesLibrary;
-import org.bridj.IntValuedEnum;
+
 import org.bridj.Pointer;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.io.PrintWriter;
-
-import static org.bridj.Pointer.getPointer;
-import static org.bridj.Pointer.pointerToDouble;
 import static org.bridj.Pointer.pointerToDoubles;
 import static org.junit.Assert.assertEquals;
 

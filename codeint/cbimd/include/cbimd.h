@@ -23,65 +23,43 @@
 * AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 * EOM
-*/ 
-#ifndef H__RADAU5_INTERNAL__H
-#define H__RADAU5_INTERNAL__H
+*/
 
-#include "../../codeintdeps/include/stack.h"
-#include "../include/cradau5.h"
+#ifndef H__CBIMD__H
+#define H__CBIMD__H
+typedef enum bimd_itol_e { ALL_SCALAR = 0, ALL_ARRAY=1} BIMD_ITOLERANCE;
+typedef enum bimd_jac_type_e {NUMERICAL_JACOBIAN = 0, USER_PROVIDED = 1} BIMD_JAC_TYPE;
+typedef enum bimd_mass_matrix_e {IDENTITY_MATRIX=0, MASS_USER_PROVIDED=1} BIMD_MASS_MATRIX;
+typedef enum bimd_iout_e { NEVER_CALLED=0, OUTPUT=1} BIMD_IOUT;
 
-typedef struct radau5_params_s {
-    radau5_ode_func f_func;
-    radau5_jacobian jac_func;
-    radau5_mass     mass_func;
-    radau5_solout   solout;
-    int neq;
-    RADAU5_ITOLERANCE itol;
-    union {
-        double *rtol_vec;
-        double rtol_val;
-    } rtol;
+typedef enum bimd_idid_e {SUCCESS=1,
+                          SUCCESS_INTR=2,
+                          INPUT_INCONSISTENT=-1,
+                          NMAX_TOO_SMALL=-2,
+                          STEP_TOO_SMALL=-3,
+                          SINGULAR_MATRIX=-4,
+                          TOO_MANY_NEWTON_FAILURES,
+                          FCN_JAC_ERROR_RETURNED} BIMD_RETVAL;
 
-    union {
-        double *atol_vec;
-        double atol_val;
-    } atol;
-    int mljac;
-    int mujac;
-    double h;
-    double* rwork;
-    int*    iwork;
-    int lrw;
-    int liw;
-    RADAU5_JACOBIAN ijac;
-    RADAU5_MASS_MATRIX imas;
-    int mlmas;
-    int mumas;
-    RADAU5_IOUT iout;
-    RADAU5_RETVAL retval;
-    double *rpar;
-    int *ipar;
-} radau5_params;
-
-void radau5_(
-    int* n,
-    void (*fcn)(int* , double* , double* , double* , double* , int* ),
-    double* x,
-    double* y,
-    double* xend,
+void bimd(
+    int* m,
+    void (*fcn)(int* , double* , double* , double* , int* , double* , int* ),
+    double* t0,
+    double* tend,
+    double* y0,
     double* h,
     double* rtol,
     double* atol,
     int* itol,
-    void (*jac)(int* , double* , double* , double* , int* , double* , int* ),
+    void (*jac)(int* , double* , double* , double** , int* , int*, double* , int* ),
     int* ijac,
     int* mljac,
     int* mujac,
-    void (*mas)(int* , double* ,int* ,double* , int* ),
+    void (*mas)(int* , double* ,int* ,int*, double* , int* ),
     int* imas,
     int* mlmas,
     int* mumas,
-    void (*solout)(int* , double* , double* , double* , double* , int*, int*, double*, int* , int* ),
+    void (*solout)(int* , int*, int*, double* , double* , double* , double* , double**, double*, int* , int* ),
     int* iout,
     double* work,
     int* lwork,
@@ -89,8 +67,7 @@ void radau5_(
     int* liwork,
     double* rpar,
     int* ipar,
-    int* idid
+    int *idid
     );
-
 
 #endif

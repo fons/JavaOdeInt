@@ -1,6 +1,6 @@
 /* 
-* 
-* https://opensource.org/licenses/BSD-3-Clause
+ * 
+ * https://opensource.org/licenses/BSD-3-Clause
 * 
 * Copyright (c) 2016, JodeInt developers
 * All rights reserved.
@@ -28,11 +28,11 @@
 #define H__CRADUA5__H
 
 typedef void (*radau5_ode_func)(int* n, double* x, double* y, double* f, double* rpar, int* ipar);
-typedef void (*radau5_jacobian)(int* n, double* x, double* y, double** dfy, int* ldfy, double* rpar, int* ipar);
-typedef void (*radau5_mass)(int* n, double** am,int* lmas,double* rpar, int* ipar);
+typedef void (*radau5_jacobian)(int* n, double* x, double* y, double* dfy, int* ldfy, double* rpar, int* ipar);
+typedef void (*radau5_mass)(int* n, double* am,int* lmas,double* rpar, int* ipar);
 typedef void (*radau5_solout)(int* nr, double* xold, double* x, double* y, double* cont, int* lrc, int* n, double* rpar, int* ipar, int* irtrn); 
 
-typedef enum radua5_itol_e { ALL_SCALAR = 0, ALL_ARRAY=1} RADAU5_ITOLERANCE;
+typedef enum radau5_itol_e { ALL_SCALAR = 0, ALL_ARRAY=1} RADAU5_ITOLERANCE;
 typedef enum radau5_jacobian_e {INTERNAL=0, JAC_USER_PROVIDED=1 } RADAU5_JACOBIAN;
 typedef enum radau5_mass_matrix_e {IDENTITY_MATRIX=0, MASS_USER_PROVIDED=1} RADAU5_MASS_MATRIX;
 typedef enum radau5_iout_e { NEVER_CALLED=0, OUTPUT=1} RADAU5_IOUT;
@@ -54,11 +54,11 @@ void radau5(
             double* rtol,
             double* atol,
             int* itol,
-            void (*jac)(int* , double* , double* , double** , int* , double* , int* ),
+            void (*jac)(int* , double* , double* , double* , int* , double* , int* ),
             int* ijac,
             int* mljac,
             int* mujac,
-            void (*mas)(int* , double** ,int* ,double* , int* ),
+            void (*mas)(int* , double* ,int* ,double* , int* ),
             int* imas,
             int* mlmas,
             int* mumas,
