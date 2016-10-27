@@ -11,6 +11,10 @@ void mebdfi(
             int* mf,
             int* idid,
             int* lout,
+            int* lwork,
+            double* work,
+            int* liwork,
+            int* iwork,
             int* mbnd,
             int* maxder,
             int* itol,    
@@ -19,9 +23,9 @@ void mebdfi(
             double* rpar,
             int* ipar,
             void (*pderv)(double* , double* , double* , double* , int*, double* , int* ),
-            void (*resid)(int*, double*, double* , double*, int*, double* , int* ),
+            void (*resid)(int*, double*, double* , double*, double*, int*, double* , int* ),
             int *ierr
             )
 {
-    mebdfi_(n,t0,h0, y0, yprime, tout,tend,mf,idid,lout,mbnd,maxder,itol,rtol, atol, rpar, ipar, pderv, resid,ierr);
+    mebdfi_(n,t0,h0, y0, yprime, tout,tend,mf,idid,lout,lwork, work, liwork, iwork, mbnd,maxder,itol,rtol, atol, rpar, ipar, pderv, resid,ierr);
 }

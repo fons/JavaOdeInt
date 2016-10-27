@@ -35,7 +35,7 @@ import java.nio.DoubleBuffer;
 import static org.bridj.Pointer.pointerToDoubles;
 import static org.junit.Assert.assertEquals;
 
-public class BimdDaeClass2 {
+public class BimdDaeClass2Test {
     @Test
     public void BimdDaaClass2() {
         double from =  0.0;

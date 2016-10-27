@@ -12,6 +12,10 @@ extern void mebdfi_(
     int* mf,
     int* idid,
     int* lout,
+    int* lwork,
+    double* work,
+    int* liwork,
+    int* iwork,
     int* mbnd,
     int* maxder,
     int* itol,    
@@ -20,7 +24,7 @@ extern void mebdfi_(
     double* rpar,
     int* ipar,
     void (*pderv)(double* , double* , double* , double* , int*, double* , int* ),
-    void (*resid)(int*, double*, double* , double*, int*, double* , int* ),
+    void (*resid)(int*, double*, double* , double*, double*, int*, double* , int* ),
     int *ierr
     );
 
