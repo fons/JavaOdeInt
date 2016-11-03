@@ -31,8 +31,8 @@
 typedef enum mebdfi_method_e {
     BDF_USER_FULL_JAC         = 21,
     BDF_INTERNAL_FULL_JAC     = 22,
-    BDF_INTERNAL_DIAG_JAC     = 23,
-    BDF_USER_BAND_JAC         = 24
+    BDF_USER_BAND_JAC         = 23,
+    BDF_INTERNAL_DIAG_JAC     = 24
 } MEBDFI__METHOD_FLAG;
 
 typedef enum mebdfi_itol_e { ALL_SCALAR = 2, ATOL_ARRAY=3, RTOL_ARRAY=4, ALL_ARRAY=5} MEBDFI_ITOLERANCE;
@@ -75,7 +75,18 @@ void mebdfi(
     double* atol,
     double* rpar,
     int* ipar,
-    void (*pderv)(double* , double* , double* , double* , int*, double* , int* ),
+            void (*pderv)(double* , /*t*/
+                          double* , /*y*/
+                          double* , /*pd*/
+                          int*,    /*n*/
+                          double* , /*yprime*/
+                          int*,     /*mbnd*/
+                          double* , /*con*/
+                          int*    , /*ipar*/
+                          double* , /*rpar*/
+                          int* /*ier*/
+                          ),
+
     void (*resid)(int*, double*, double* , double*, double*, int*, double* , int* ),
     int *ierr
     );
