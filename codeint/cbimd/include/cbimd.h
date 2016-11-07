@@ -59,7 +59,7 @@ void bimd(
     int* imas,
     int* mlmas,
     int* mumas,
-    void (*solout)(int* , int*, int*, double* , double* , double* , double* , double**, double*, int* , int* ),
+    void (*solout)(int* , int*, int*, double* , double* , double* , double* , double*, double*, int* , int* ),
     int* iout,
     double* work,
     int* lwork,

@@ -13,6 +13,7 @@ OS_ARCH = linux_x64
 SHARED_EXT = so
 SHARED_FLAG=-shared
 LIBARGS=-Wl,-soname,lib$(LIBNAME).$(SHARED_EXT) 
+FCFLAGS=-fPIC
 endif
 #-Wl,-soname,libopks.so
 
