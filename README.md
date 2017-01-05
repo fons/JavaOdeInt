@@ -1,3 +1,6 @@
+
+https://travis-ci.org/fons/JavaOdeInt.svg?branch=master
+
 #Summary
 
 There is no need to reinvent the wheel when it comes to ODE solvers. 
