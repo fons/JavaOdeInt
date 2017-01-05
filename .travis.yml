@@ -5,8 +5,7 @@ before_install:
 - sudo apt-get install -y gfortran
 
 script :
-- cd ./jodeint/ && mvn test -B && cd -
-
+- cd ./jodeint/ && export LD_LIBRARY_PATH=`pwd`/src/main/resources/lib/linux_x64/:$LD_LIBRARY_PATH && mvn test && cd -
 jdk:
   - oraclejdk8
 
