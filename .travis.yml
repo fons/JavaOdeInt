@@ -1,0 +1,9 @@
+language: java
+
+script :
+- cd ./jodeint/ && mvn test -B && cd -
+
+jdk:
+  - oraclejdk8
+
+
