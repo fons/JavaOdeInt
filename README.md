@@ -1,5 +1,5 @@
+[![Build Status](https://travis-ci.org/fons/JavaOdeInt.svg?branch=master)](https://travis-ci.org/fons/JavaOdeInt)
 
-https://travis-ci.org/fons/JavaOdeInt.svg?branch=master
 
 #Summary
 
