@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/fons/JavaOdeInt.svg?branch=master)](https://travis-ci.org/fons/JavaOdeInt)
 
 
-#Summary
+# Summary
 
 There is no need to reinvent the wheel when it comes to ODE solvers. 
 
@@ -13,9 +13,9 @@ JavaOdeInt 's aim is to provide the basics from which a fully fleshed out ode so
 Between the Java interface and the Fortran packages sits a very thin C-layer. 
 The purpose of C interface is two-fold: To provide [bridj](https://github.com/nativelibs4java/BridJ) with a header file from which it can generate the Java classes and to provide a very basic interface to the Fortran routines.
 
-#Interfaces 
+# Interfaces 
 
-##Basic Interface
+## Basic Interface
 
  
 The name of the basic interface is that of the encapsulated Fortran function followed by `_basic`, e.g. `lsoda_basic`. It's purpose is to get up and running with a basic set of defaults.
@@ -24,7 +24,7 @@ The basic C interface requires a callback function, the dimensionality of the od
 
 The C function executes a loop over the Fortran function and writes the results to the user supplied  stack. It may also change some of the integration parameters. For example if it detects that the integration requires a larger number of steps that parameter is increased.
 
-##Full Interface
+## Full Interface
 
 
 Using the full Fortran interface is also possible. This exposes all the capabilities of the Fortran code.
@@ -35,7 +35,7 @@ Each Fortran function has an extensive preamble describing its use. This was ext
 
 Regardless of the interface you need to use [bridj](https://github.com/nativelibs4java/BridJ) for memory allocation and pointer management.
 
-##Examples
+## Examples
  
 
 Both the C interface and the Java interface come with a set of tests. The tests include examples of the use of the basic and full interface.
@@ -48,7 +48,7 @@ Additional examples can be found [here](https://github.com/fons/JavaOdeIntExampl
 
  TBA
  
-##Using maven
+## Using maven
 
 ### Mac OSX
 
@@ -128,7 +128,7 @@ If the maven build fails, the following steps may be helpful in figuring out the
 7. If everything under steps 4-6 is successful execute mvn package. At this stage inspect the generated java classes.
 
 
-#[Fortran libraries covered](id:fortranpackages)
+# [Fortran libraries covered](id:fortranpackages)
 
 
 * [odepack](https://computation.llnl.gov/casc/odepack/odepack_home.html)
@@ -225,7 +225,7 @@ These are two initial value ODE solvers for a set of first order ode's for stiff
     rkf45 should generally not be used when the user is demanding
     high accuracy.
 
-#Copyright
+# Copyright
 
 https://opensource.org/licenses/BSD-3-Clause
 
