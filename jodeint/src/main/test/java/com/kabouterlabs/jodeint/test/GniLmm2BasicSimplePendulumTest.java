@@ -65,7 +65,7 @@ public class GniLmm2BasicSimplePendulumTest extends SimplePendulumBase {
         CgnicodesLibrary.gni_lmm2_basic(stack, qqdot, qq, f_func, neq, t0, tf, dt,CgnicodesLibrary.gni_lmm2_method_e.LMM2_METH_803);
         String name = new Object(){}.getClass().getEnclosingMethod().getName();
         PrintStack.print(stack,t0,tf,dt, 2 * neq,name + ".csv");
-        assertEquals("results don't match within expected range : " + name, CsvResultCompare.dataEqual(0.00001, stack,t0,tf,dt,2*neq, baseLineResult()),true);
+        assertEquals("results don't match within expected range : " + name, CsvResultCompare.dataEqual(0.01, stack,t0,tf,dt,2*neq, baseLineResult()),true);
     }
 
 }

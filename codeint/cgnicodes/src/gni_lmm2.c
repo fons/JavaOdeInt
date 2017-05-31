@@ -52,7 +52,7 @@ void gni_lmm2_basic(double* stack, double* p, double* q, gnicodes_ode_func f_fun
     int index = 0;
     int steps = abs((int) ((xfinal - xstart)/deltax));
     
-    gnicodes_params* dlsop = create_basic_gni_lmm2_params(n, f_func, steps, meth);
+    gnicodes_params* dlsop = create_basic_gni_lmm2_params(n, f_func, 30, meth);
     stack = write_pq_to_stack(stack, n, &index, x, p, q);
     while (x < xfinal) {
         gni_lmm2_w(dlsop, x + deltax, &x, p, q);

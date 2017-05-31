@@ -9,4 +9,4 @@ jodeint/src/main/jnaerator/
 idea
 *.log
 *.pid
-
+.idea/

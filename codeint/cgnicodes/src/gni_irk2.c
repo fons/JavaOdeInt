@@ -48,53 +48,21 @@ static void simple_pendulum(int *n, double* x, double* q, double* f, double* rpa
     f[0] = - alpha * sin(q[0]);
     return;
 }
-/*
-static gnicodes_ode_func F;
 
-static void wrapper(int *n, double* x, double* q, double* f, double* rpar, int* ipar)
-{
-    struct timeval t1, t2;
-    double elapsedTime;
-
-    gettimeofday(&t1, NULL);       
-
-    F(n,x,q,f,rpar,ipar);
-    gettimeofday(&t2, NULL);
-    elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
-    elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
-    fprintf(stderr, "\t\t\t\%lf \n", elapsedTime);
-
-    return;
-}
-
-*/
 void gni_irk2_basic(double* stack, double* p, double* q, gnicodes_ode_func f_func, int n, double xstart, double xfinal, double deltax, GNI_IRK2_METH meth)
 {
-/*
-    struct timeval t1, t2;
-    double elapsedTime;
-*/  
+
     double x = xstart;
     int index = 0;
     int steps = abs((int) ((xfinal - xstart)/deltax));
-    //fprintf(stderr, "start integration loop\n");
-    gnicodes_params* dlsop = create_basic_gnicodes_params(n, f_func, steps, meth);
-/*
-    F = simple_pendulum;
 
-    gnicodes_params* dlsop = create_basic_gnicodes_params(n, &wrapper, steps, meth);
-*/  
+    gnicodes_params* dlsop = create_basic_gnicodes_params(n, f_func, 1, meth);
+
     stack = write_pq_to_stack(stack, n, &index, x, p, q);
     while ( x < xfinal) {
-        //gettimeofday(&t1, NULL);       
         gni_irk2_w(dlsop, x + deltax, &x, p, q);
-        //gettimeofday(&t2, NULL);
-        //elapsedTime = (t2.tv_sec - t1.tv_sec) * 1000.0;      // sec to ms
-        //elapsedTime += (t2.tv_usec - t1.tv_usec) / 1000.0;
-        //fprintf(stderr, "MAIN %lf \n", elapsedTime);
         stack = write_pq_to_stack(stack, n, &index, x, q, p);
     }
-    //fprintf(stderr, "DONE integration loop\n");
 
 }
 

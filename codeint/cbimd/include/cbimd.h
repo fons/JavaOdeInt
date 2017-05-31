@@ -30,16 +30,16 @@
 typedef enum bimd_itol_e { ALL_SCALAR = 0, ALL_ARRAY=1} BIMD_ITOLERANCE;
 typedef enum bimd_jac_type_e {NUMERICAL_JACOBIAN = 0, USER_PROVIDED = 1} BIMD_JAC_TYPE;
 typedef enum bimd_mass_matrix_e {IDENTITY_MATRIX=0, MASS_USER_PROVIDED=1} BIMD_MASS_MATRIX;
+
 typedef enum bimd_iout_e { NEVER_CALLED=0, OUTPUT=1} BIMD_IOUT;
 
-typedef enum bimd_idid_e {SUCCESS=1,
-                          SUCCESS_INTR=2,
+typedef enum bimd_idid_e {SUCCESS=0,
                           INPUT_INCONSISTENT=-1,
                           NMAX_TOO_SMALL=-2,
                           STEP_TOO_SMALL=-3,
                           SINGULAR_MATRIX=-4,
-                          TOO_MANY_NEWTON_FAILURES,
-                          FCN_JAC_ERROR_RETURNED} BIMD_RETVAL;
+                          TOO_MANY_NEWTON_FAILURES=-5,
+                          FCN_JAC_ERROR_RETURNED=-6} BIMD_RETVAL;
 
 void bimd(
     int* m,
@@ -51,7 +51,7 @@ void bimd(
     double* rtol,
     double* atol,
     int* itol,
-    void (*jac)(int* , double* , double* , double** , int* , int*, double* , int* ),
+    void (*jac)(int* , double* , double* , double* , int* , int*, double* , int* ),
     int* ijac,
     int* mljac,
     int* mujac,
