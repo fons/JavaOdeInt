@@ -12,7 +12,7 @@ OS = $(shell uname)
 
 ifeq ($(OS), Darwin)
   OS_ARCH = darwin_universal
-  LDFLAGS   += -mmacosx-version-min=10.11
+  LDFLAGS   += -mmacosx-version-min=10.12
   SHARED_EXT = dylib
   SHARED_FLAG=-dynamiclib
  else
@@ -38,7 +38,7 @@ all : $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJECTS) 
 	@mkdir -p $(EXE_DIR)
-	$(CC) $(LDFLAGS)  $(OBJECTS)  -o $@ -L $(LIB_DIR) $(LIBS) -lm -lgfortran 
+	$(CC) $(LDFLAGS)  $(OBJECTS)  -o $@ -L $(LIB_DIR) $(LIBS) -lm 
 
 $(OBJ_DIR)/%.o: %.c
 	@mkdir -p $(OBJ_DIR)
