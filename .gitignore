@@ -10,3 +10,4 @@ idea
 *.log
 *.pid
 .idea/
+pom.xml.versionsBackup
