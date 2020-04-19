@@ -22,14 +22,14 @@
 	<groupId>com.kabouterlabs</groupId>
 	<artifactId>JavaOdeInt</artifactId>
 	<name>ode solver interface</name>
-	<version>DEV-SNAPSHOT</version>
+	<version>0.9.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.5</maven.compiler.source>
 		<maven.compiler.target>1.5</maven.compiler.target>
-		<bridj.version>0.7.1-SNAPSHOT</bridj.version>
+		<bridj.version>0.7.0</bridj.version>
 	</properties>
 
 	<dependencies>
