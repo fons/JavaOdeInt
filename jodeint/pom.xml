@@ -21,10 +21,70 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.kabouterlabs</groupId>
 	<artifactId>JavaOdeInt</artifactId>
-	<name>ode solver interface</name>
-	<version>0.9.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<!--name>ode solver interface</name-->
+	<!--version>0.9.1-SNAPSHOT</version-->
+	<packaging>
+            jar
+      </packaging>
+	<name>
+            ${project.groupId}:${project.artifactId}:${os.detected.classifier}
+      </name>
+      <version>
+            0.9.1-SNAPSHOT
+      </version>
+        
+        
+        <description>
+            Java interface to various ODE and DAE solvers, like odepack, vode, irk2, radau5. The jar includes the fortran and C libraries and is therefore platform specific
+        </description>
+        <url>
+            https://github.com/fons/JavaOdeInt
+        </url>
+        <licenses>
+            <license>
+                <name>
+                    The 3-Clause BSD License
+                </name>
+                <url>
+                    https://opensource.org/licenses/BSD-3-Clause
+                </url>
+            </license>
+        </licenses>
 
+        <developers>
+            <developer>
+                <name>Fons Haffmans</name>
+                <email>
+                    afh@mohegan-skunkworks.com
+                </email>
+                <organization>
+                    Mohegan Skunk Works 
+                </organization>
+                <organizationUrl>
+                    https://github.com/fons/JavaOdeInt
+                </organizationUrl>
+            </developer>
+        </developers>
+
+        <scm>
+            <connection>
+                scm:git:git://github.com/fons/JavaOdeInt.git
+            </connection>
+            <developerConnection>
+                scm:git:ssh://github.com/fons/JavaOdeInt.git
+            </developerConnection>
+            <url>
+                https://github.com/fons/JavaOdeInt/tree/master
+            </url>
+        </scm>
+        
+        <distributionManagement>
+            <snapshotRepository>
+                <id>ossrh</id>
+                <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            </snapshotRepository>
+        </distributionManagement>
+        
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.5</maven.compiler.source>
@@ -67,7 +127,45 @@
             </extensions>
             
 	    <plugins>
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.7</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
+                </plugin>
 
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-gpg-plugin</artifactId>
+                    <version>1.5</version>
+                    <executions>
+                        <execution>
+                            <id>sign-artifacts</id>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>sign</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                
+                <plugin>
+                    <groupId>org.sonatype.plugins</groupId>
+                    <artifactId>nexus-staging-maven-plugin</artifactId>
+                    <version>1.6.7</version>
+                    <extensions>true</extensions>
+                    <configuration>
+                        <serverId>ossrh</serverId>
+                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    </configuration>
+                </plugin>
+                
 		<plugin>
 		    <groupId>com.nativelibs4java</groupId>
 		    <artifactId>maven-jnaerator-plugin</artifactId>
@@ -107,6 +205,21 @@
        	            <artifactId>build-helper-maven-plugin</artifactId>
        	            <version>1.2</version>
                 </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>2.2.1</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                
                 <plugin>
        	            <groupId>org.apache.maven.plugins</groupId>
        	            <artifactId>maven-javadoc-plugin</artifactId>
@@ -125,25 +238,28 @@
 
                 <plugin>
 
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-install-plugin</artifactId>
-            <version>2.5.2</version>
-            <executions>
-                <execution>
-                    <goals>
-                        <goal>install-file</goal>
-                    </goals>
-                    <phase>install</phase>
-                    <configuration>
-                        <file>${project.build.directory}/${project.artifactId}-${project.version}-${os.detected.classifier}.${project.packaging}</file>
-                        <generatePom>false</generatePom>
-                        <pomFile>pom.xml</pomFile>
-                        <version>${project.version}-${os.detected.classifier}</version>
-                    </configuration>
-                </execution>
-            </executions>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-install-plugin</artifactId>
+                    <version>2.5.2</version>
+                    <executions>
+                        <execution>
+                            <goals>
+                                <goal>install-file</goal>
+                            </goals>
+                            <phase>install</phase>
+                            <configuration>
+                                <file>${project.build.directory}/${project.artifactId}-${project.version}-${os.detected.classifier}.${project.packaging}</file>
+                                <generatePom>false</generatePom>
+                                <pomFile>pom.xml</pomFile>
+                                <version>${project.version}-${os.detected.classifier}</version>
+                            </configuration>
+                        </execution>
+                    </executions>
                 </plugin> 
+
             </plugins>
+
+            
 	    <finalName>${project.artifactId}-${project.version}-${os.detected.classifier}</finalName>
             <testSourceDirectory>src/main/test/java</testSourceDirectory>
 

@@ -1,4 +1,4 @@
 LIBNAME = cquadpack
-LINFLAGS =   -lquadpack -lgfortran
+LINFLAGS =   -lquadpack 
 include ../../../config/c/Makefile.f
 

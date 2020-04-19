@@ -11,7 +11,7 @@ OS = $(shell uname)
 
 ifeq ($(OS), Darwin)
   OS_ARCH = darwin_universal
-  LDFLAGS   += -mmacosx-version-min=10.11
+  LDFLAGS   += -mmacosx-version-min=10.12
   SHARED_EXT = dylib
   SHARED_FLAG=-dynamiclib
   LD=gcc
