@@ -118,6 +118,9 @@
         
 
 	<build>
+            <!--
+            https://github.com/trustin/os-maven-plugin
+            -->
             <extensions>
                 <extension>
                     <groupId>kr.motd.maven</groupId>
