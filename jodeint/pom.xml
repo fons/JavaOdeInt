@@ -30,7 +30,7 @@
             ${project.groupId}:${project.artifactId}:${os.detected.classifier}
       </name>
       <version>
-            0.9.1-SNAPSHOT
+            1.0.0
       </version>
         
         
