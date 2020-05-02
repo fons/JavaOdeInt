@@ -2,6 +2,7 @@
 [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
 [![Build Status](https://travis-ci.org/fons/JavaOdeInt.svg?branch=master)](https://travis-ci.org/fons/JavaOdeInt)
 [![javadoc](https://javadoc.io/badge2/com.kabouterlabs/JavaOdeInt/javadoc.svg)](https://javadoc.io/doc/com.kabouterlabs/JavaOdeInt)
+[![DOI](https://zenodo.org/badge/67310010.svg)](https://zenodo.org/badge/latestdoi/67310010)
 [static code analysis:deepcode:ai](https://www.deepcode.ai/app/gh/)
 <!-- badges: end -->
 
